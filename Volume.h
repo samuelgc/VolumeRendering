@@ -10,8 +10,12 @@ public:
 
     ~Volume();
 
+    double sample(double pos[], int field);
+
 private:
 
     // Fields
+    vector<string> field_names;
+    vector<Field*> fields;
 
 };
