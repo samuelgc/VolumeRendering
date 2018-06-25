@@ -1,6 +1,8 @@
 #include "Scene.h"
 
-Scene::Scene() {}
+Scene::Scene() {
+    cam = new Camera();
+}
 
 Scene::Scene(string file) {
     

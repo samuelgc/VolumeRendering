@@ -8,7 +8,15 @@ public:
 
     Camera();
 
+    Camera(double lookFrom[], double lookAt[], int x, int y);
+
     ~Camera();
+
+    double* getOrigin();
+
+    double* getOrient();
+
+    int* getRes();
 
 private:
 

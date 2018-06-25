@@ -10,6 +10,8 @@ public:
 
     ~Integrator();
 
+    void integrate();
+
 private:
 
 };
