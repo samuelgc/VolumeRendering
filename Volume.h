@@ -1,3 +1,6 @@
+#include <vector>
+#include <string>
+
 #include "Field.h"
 
 using namespace std;
@@ -11,6 +14,8 @@ public:
     ~Volume();
 
     double sample(double pos[], int field);
+
+    string name(int field);
 
 private:
 
