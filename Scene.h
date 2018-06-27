@@ -34,6 +34,11 @@ public:
      */
     int height();
 
+    /**
+     * Set screen to world transform
+     */
+    void setTransform();
+
 private:
 
     /**

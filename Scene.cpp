@@ -32,3 +32,7 @@ int Scene::width() {
 int Scene::height() {
     return cam->getRes()[1];
 }
+
+void Scene::setTransform() {
+
+}
