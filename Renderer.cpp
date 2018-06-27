@@ -9,6 +9,7 @@ void Renderer::loadScene(string inFile) {
 }
 
 void Renderer::render() {
+    // Assume a camera field of view of 30 degrees
 
 }
 

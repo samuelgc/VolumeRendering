@@ -12,10 +12,19 @@ public:
 
     ~Camera();
 
+    /**
+     * returns the look from point of the Camera
+     */
     double* getOrigin();
 
+    /**
+     * returns the look at point of the Camera
+     */
     double* getOrient();
 
+    /**
+     * returns the resolution of the screen as an array { x, y }
+     */
     int* getRes();
 
 private:

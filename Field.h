@@ -1,6 +1,5 @@
 
 
-using namespace std;
 
 class Field {
 
@@ -12,6 +11,12 @@ public:
 
     ~Field();
 
+    /**
+     * Gives the value of this field at the specified index location
+     *
+     * @param pos - index of voxel to be sampled
+     * @return
+     */
     double sample(double pos[3]);
 
 private:
