@@ -13,5 +13,13 @@ void Renderer::render() {
 }
 
 void Renderer::write(string outFile) {
-
+    ofstream file;
+    string filename = "..\\results\\" + outFile;
+    file.open(filename);
+    file << "P3\n";
+    file << scene->width() << " " << scene->height() << "\n";
+    file << "255\n";
+    for (int i = 0; i < pixels.size(); i++)
+        file << (int)pixels.at(i) << " ";
+    file.close();
 }
