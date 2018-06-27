@@ -1,3 +1,7 @@
+#ifndef SCENE_H
+#define SCENE_H
+
+
 #include <fstream>
 #include <string>
 #include <vector>
@@ -43,3 +47,6 @@ private:
     vector<Volume*> volumes;
 
 };
+
+
+#endif SCENE_H

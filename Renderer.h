@@ -1,3 +1,7 @@
+#ifndef RENDERER_H
+#define RENDERER_H
+
+
 #include <fstream>
 #include <string>
 #include <vector>
@@ -35,3 +39,6 @@ private:
     vector<int> pixels;
 
 };
+
+
+#endif RENDERER_H

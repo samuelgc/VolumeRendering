@@ -1,6 +1,6 @@
+#ifndef INTEGRATOR_H
+#define INTEGRATOR_H
 
-
-using namespace std;
 
 class Integrator {
 
@@ -15,3 +15,6 @@ public:
 private:
 
 };
+
+
+#endif INTEGRATOR_H

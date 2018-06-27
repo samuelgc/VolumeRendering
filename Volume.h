@@ -1,3 +1,7 @@
+#ifndef VOLUME_H
+#define VOLUME_H
+
+
 #include <vector>
 #include <string>
 
@@ -53,3 +57,6 @@ private:
     int res[3];
 
 };
+
+
+#endif VOLUME_H

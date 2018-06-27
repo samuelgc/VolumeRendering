@@ -1,6 +1,6 @@
+#ifndef CAMERA_H
+#define CAMERA_H
 
-
-using namespace std;
 
 class Camera {
 
@@ -34,3 +34,6 @@ private:
     int res[2];
 
 };
+
+
+#endif CAMERA_H

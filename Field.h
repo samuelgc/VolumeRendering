@@ -1,4 +1,5 @@
-
+#ifndef FIELD_H
+#define FIELD_H
 
 
 class Field {
@@ -27,3 +28,6 @@ private:
     // Likely a matrix
 
 };
+
+
+#endif FIELD_H
