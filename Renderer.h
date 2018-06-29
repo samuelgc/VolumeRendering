@@ -41,4 +41,4 @@ private:
 };
 
 
-#endif RENDERER_H
+#endif //RENDERER_H

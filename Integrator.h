@@ -17,4 +17,4 @@ private:
 };
 
 
-#endif INTEGRATOR_H
+#endif //INTEGRATOR_H

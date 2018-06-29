@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Camera.h"
+#include "Matrix.h"
 #include "Volume.h"
 
 using namespace std;
@@ -39,6 +40,13 @@ public:
      */
     void setTransform();
 
+    /**
+     * Transforms a point from screen space to world space
+     *
+     * @param p
+     */
+    void transform(double p[]);
+
 private:
 
     /**
@@ -51,7 +59,9 @@ private:
     Camera* cam;
     vector<Volume*> volumes;
 
+    Matrix* transfo;
+
 };
 
 
-#endif SCENE_H
+#endif //SCENE_H

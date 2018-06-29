@@ -36,3 +36,7 @@ int Scene::height() {
 void Scene::setTransform() {
 
 }
+
+void Scene::transform(double p[]) {
+    transfo->multiply(p);
+}

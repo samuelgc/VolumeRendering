@@ -59,4 +59,4 @@ private:
 };
 
 
-#endif VOLUME_H
+#endif //VOLUME_H
