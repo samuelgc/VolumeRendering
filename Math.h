@@ -3,6 +3,7 @@
 
 
 #include <cmath>
+#include "Matrix.h"
 
 const double PI = 3.14159265359;
 
@@ -15,5 +16,13 @@ const double PI = 3.14159265359;
  */
 double dist(double a[], double b[]);
 
+/**
+ * Multiplies two matrices and returns the resulting Matrix
+ *
+ * @param a
+ * @param b
+ * @return
+ */
+Matrix* mat_mult(Matrix* a, Matrix* b);
 
 #endif //MATH_H
