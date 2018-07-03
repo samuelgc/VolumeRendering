@@ -19,6 +19,11 @@ public:
     ~Renderer();
 
     /**
+     * Creates an empty default scene
+     */
+    void newScene();
+
+    /**
      * Loads a scene descritption from a file
      */
     void loadScene(string inFile);
@@ -34,6 +39,13 @@ public:
     void write(string outFile);
 
 private:
+
+    /**
+     * Converts float rgb values to int and adds to pixel buffer
+     *
+     * @param rgb
+     */
+    void addPixel(double rgb[]);
 
     Scene* scene;
     vector<int> pixels;

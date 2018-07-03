@@ -5,7 +5,7 @@ Camera::Camera() {
         origin[i] = 0;
         orient[i] = 0;
         if (i < 2)
-            res[i] = 100;
+            res[i] = 1024;
     }
     origin[2] = 10;
 }

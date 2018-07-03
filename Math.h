@@ -7,6 +7,8 @@
 
 const double PI = 3.14159265359;
 
+/// Vector Math ///
+
 /**
  * Calculates the distance between vectors a and b
  *
@@ -16,6 +18,8 @@ const double PI = 3.14159265359;
  */
 double dist(double a[], double b[]);
 
+/// Matrix Math ///
+
 /**
  * Multiplies two matrices and returns the resulting Matrix
  *
@@ -24,5 +28,15 @@ double dist(double a[], double b[]);
  * @return
  */
 Matrix* mat_mult(Matrix* a, Matrix* b);
+
+/// Color Math ///
+
+/**
+ * Converts a float 0-1 color to int 0-255 color
+ *
+ * @param value
+ * @return
+ */
+int convert(double value);
 
 #endif //MATH_H

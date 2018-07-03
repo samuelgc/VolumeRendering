@@ -36,6 +36,16 @@ public:
     int height();
 
     /**
+     * return top left hand corner in world space
+     */
+    double* getCorner();
+
+    /**
+     * returns the size of a pixel
+     */
+    double getInc();
+
+    /**
      * Set screen to world transform
      */
     void setTransform();
@@ -60,7 +70,8 @@ private:
     vector<Volume*> volumes;
 
     Matrix* transfo;
-
+    double corner[2];
+    double inc;
 };
 
 

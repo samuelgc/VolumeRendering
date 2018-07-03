@@ -35,6 +35,14 @@ int Scene::height() {
     return cam->getRes()[1];
 }
 
+double* Scene::getCorner() {
+    return corner;
+}
+
+double Scene::getInc() {
+    return inc;
+}
+
 void Scene::setTransform() {
     transfo = new Matrix();
     transfo->set(3, 3, 1);
@@ -81,6 +89,13 @@ void Scene::setTransform() {
     mult->set(1, 3, cam->getOrient()[1]);
     mult->set(2, 3, cam->getOrient()[2]);
     transfo = mat_mult(mult, transfo);
+
+    // Set size of screen in world units
+    double len = dist(cam->getOrigin(), cam->getOrient());
+    len *= atan(.2618);
+    corner[0] = -1 * len;
+    corner[1] = len * (cam->getRes()[1] / cam->getRes()[0]);
+    inc = (len * 2.0) / cam->getRes()[0];
 }
 
 void Scene::transform(double p[]) {

@@ -20,3 +20,12 @@ Matrix* mat_mult(Matrix* a, Matrix* b) {
     }
     return result;
 }
+
+int convert(double value) {
+    value *= 255;
+    if(value > 255)
+        return 255;
+    if(value < 0)
+        return 0;
+    return int(value);
+}
