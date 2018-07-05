@@ -1,0 +1,24 @@
+CAMERA LFx LFy LFz LAx LAy LAz FOVx FOVy
+DIRECTIONAL_LIGHT X Y Z R G B
+POINT_LIGHT X Y Z R G B
+AREA_LIGHT X1 Y1 Z1 X2 Y2 Z2 R G B
+SPHERE_LIGHT X Y Z Rad R G B
+
+Where:
+CAMERA: specifies camera qualities
+    LFx LFy LFz Are the LookFrom coordinates
+    LAx LAy LAz Are the LookAt coordinates
+    RESx RESy are the pixel resolution in the X and Y directions
+DIRECTIONAL_LIGHT: specifies a directional light
+    X Y Z is the direction of the directional light source
+    R G B is the color of the light source
+POINT_LIGHT: specifies a directional light
+    X Y Z is the location of the point light source
+    R G B is the color of the light source
+AREA_LIGHT: specifies an area light
+    X1 Y1 Z1 X2 Y2 Z2 the extents of the light source
+    R G B the color of the light
+SPHERE_LIGHT: specifies a spherical light
+    X Y Z Location of the center of the sphere
+    Rad The radius of the spherical light
+    R G B The color of the light

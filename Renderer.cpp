@@ -35,7 +35,7 @@ void Renderer::render() {
 
 void Renderer::write(string outFile) {
     ofstream file;
-    string filename = "..\\output\\" + outFile;
+    string filename = "output\\" + outFile;
     file.open(filename);
     file << "P3\n";
     file << scene->width() << " " << scene->height() << "\n";

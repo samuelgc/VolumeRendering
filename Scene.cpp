@@ -23,6 +23,20 @@ void Scene::parse(string filename) {
     }
 
     // Parse out elements of the scene
+    string waste;
+    file >> waste;              /// READ CAMERA
+    double lf[3] = {0,0,0};
+    double la[3] = {0,0,0};
+    int resx, resy;
+    for(int i = 0; i < 3; i++)
+        file >> lf[i];
+    for(int i = 0; i < 3; i++)
+        file >> la[i];
+    file >> resx;
+    file >> resy;
+    cam = new Camera(lf, la, resx, resy);
+
+    // TODO: potentially add lights
 
     file.close();
 }

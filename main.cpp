@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     }
 
     Renderer* vrender = new Renderer();
-    vrender->newScene();
+    vrender->loadScene(argv[1]);
     vrender->render();
     vrender->write(argv[2]);
 
