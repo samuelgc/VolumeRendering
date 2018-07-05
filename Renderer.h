@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Scene.h"
+#include "Integrator.h"
 
 using namespace std;
 
@@ -49,6 +50,8 @@ private:
 
     Scene* scene;
     vector<int> pixels;
+
+    Integrator* march;
 
 };
 

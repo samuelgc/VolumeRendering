@@ -49,6 +49,10 @@ int Scene::height() {
     return cam->getRes()[1];
 }
 
+double* Scene::origin() {
+    return cam->getOrigin();
+}
+
 double* Scene::getCorner() {
     return corner;
 }

@@ -15,6 +15,8 @@ public:
 
     Volume();
 
+    Volume(double bot[], double top[], int count[]);
+
     ~Volume();
 
     /**
@@ -55,6 +57,7 @@ private:
     double max[3];
     double min[3];
     int res[3];
+    double size;
 
 };
 

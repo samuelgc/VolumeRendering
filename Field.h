@@ -1,6 +1,9 @@
 #ifndef FIELD_H
 #define FIELD_H
 
+#include <vector>
+
+using namespace std;
 
 class Field {
 
@@ -23,9 +26,7 @@ public:
 private:
 
     int size[3];
-
-    // Data structure that will hold the info
-    // Likely a matrix
+    vector<vector<vector<double>>> values;
 
 };
 

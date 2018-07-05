@@ -10,9 +10,7 @@ public:
 
     ~Integrator();
 
-    void integrate();
-
-private:
+    void integrate(double orig[], double p[], double result[]);
 
 };
 

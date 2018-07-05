@@ -2,7 +2,9 @@
 
 #include "Math.h"
 
-Renderer::Renderer() {}
+Renderer::Renderer() {
+    march = new Integrator;
+}
 
 Renderer::~Renderer() {}
 
@@ -27,7 +29,7 @@ void Renderer::render() {
             point[0] += i;
             point[1] += i;
             scene->transform(point);
-            // TODO: Here's the part where we shoot the ray through and get the color back
+            march->integrate(scene->origin(), point, rgb);
             addPixel(rgb);
         }
     }

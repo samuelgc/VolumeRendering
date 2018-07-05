@@ -36,6 +36,11 @@ public:
     int height();
 
     /**
+     * returns the location of the camera
+     */
+    double* origin();
+
+    /**
      * return top left hand corner in world space
      */
     double* getCorner();
