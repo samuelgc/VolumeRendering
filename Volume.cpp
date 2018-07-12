@@ -28,3 +28,11 @@ void Volume::addField(string name) {
     field_names.push_back(name);
     fields.push_back(new Field(res));
 }
+
+double* Volume::getMin() {
+    return min;
+}
+
+double* Volume::getMax() {
+    return max;
+}

@@ -62,6 +62,11 @@ public:
      */
     void transform(double p[]);
 
+    /**
+     * Returns a list of all the volumes in the scene
+     */
+    vector<Volume*> getVolumes();
+
 private:
 
     /**

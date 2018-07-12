@@ -8,6 +8,11 @@ double dist(double a[], double b[]){
     return sqrt(sum);
 }
 
+void subtract(double a[], double b[]) {
+    for(int i = 0; i < 3; i++)
+        b[i] = b[i] - a[i];
+}
+
 Matrix* mat_mult(Matrix* a, Matrix* b) {
     Matrix* result = new Matrix();
     for(int i = 0; i < 4; i++) {

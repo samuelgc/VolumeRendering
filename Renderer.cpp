@@ -20,18 +20,22 @@ void Renderer::render() {
     // Assume a camera field of view of 30 degrees
     scene->setTransform();
     double i = scene->getInc();
-    double point[3] = {0,0,0};
+    double point[3] = {0, 0, 0};
     double rgb[3] = {0,0,0};
+    double old_y = scene->getCorner()[1];
     for(int x = 0; x < scene->width(); x++) {
-        point[1] = 0;
+        double old_x = scene->getCorner()[0];
         for(int y = 0; y < scene->height(); y++) {
             point[2] = 0;
-            point[0] += i;
-            point[1] += i;
+            point[1] = old_y;
+            point[0] = old_x;
             scene->transform(point);
-            march->integrate(scene->origin(), point, rgb);
+            subtract(scene->origin(), point);
+            march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
             addPixel(rgb);
+            old_x += i;
         }
+        old_y -= i;
     }
 }
 

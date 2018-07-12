@@ -18,6 +18,14 @@ const double PI = 3.14159265359;
  */
 double dist(double a[], double b[]);
 
+/**
+ * Subtracts a from b (i.e. b - a)
+ * 
+ * @param a - vector
+ * @param b - vector
+ */
+void subtract(double a[], double b[]);
+
 /// Matrix Math ///
 
 /**

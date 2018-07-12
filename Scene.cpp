@@ -119,3 +119,7 @@ void Scene::setTransform() {
 void Scene::transform(double p[]) {
     transfo->multiply(p);
 }
+
+vector<Volume*> Scene::getVolumes() {
+    return volumes;
+}

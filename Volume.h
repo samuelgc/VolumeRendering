@@ -47,6 +47,16 @@ public:
      */
     void addField(string name);
 
+    /**
+     * Returns the min bounds of the volume
+     */
+    double* getMin();
+
+    /**
+     * Returns the max bounds of the volume
+     */
+    double* getMax();
+
 private:
 
     // Fields
