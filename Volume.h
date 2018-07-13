@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <string>
-
+#include "dataGetter/loadGeo2.0.h"
 #include "Field.h"
 
 using namespace std;
@@ -56,6 +56,12 @@ public:
      * Returns the max bounds of the volume
      */
     double* getMax();
+    // /** 
+    //  * @param fn - vector of string with the names of each field type
+    //  * Sets the field_names equal to fn
+    //  */
+    // void setAllNames(vector<string> fn);
+    void loadFireData(send_vol_data svd);
 
 private:
 

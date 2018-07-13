@@ -36,3 +36,14 @@ double* Volume::getMin() {
 double* Volume::getMax() {
     return max;
 }
+void Volume::loadFireData(send_vol_data svd)
+{
+    field_names = svd.getVolNames();
+    vector<volume_data> vd = svd.getVolData();
+    for(size_t i = 0 ; i < vd.size();i++)
+    {
+        Field * f = new Field();
+        f->setValues(vd[i].getVolData());
+        fields.push_back(f);
+    }
+}

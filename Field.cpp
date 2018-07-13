@@ -21,3 +21,7 @@ double Field::sample(double pos[3]) {
 
     return values.at(x).at(y).at(z);
 }
+void Field::setValues(vector<vector<vector<double>>> v)
+{
+    values = v;
+}

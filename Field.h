@@ -22,6 +22,11 @@ public:
      * @return
      */
     double sample(double pos[3]);
+    /**
+     * Used to set All the values in Values
+     * @params v - all values to be set
+     */
+    void setValues(vector<vector<vector<double>>> v);
 
 private:
 
