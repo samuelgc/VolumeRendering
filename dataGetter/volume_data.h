@@ -12,13 +12,18 @@ class volume_data
         int dimX; // The dimension in the X Direction
         int dimY; // The dimension in the Y Direction
         int dimZ; // The dimension in the Z Direction
+        int res[3];
     public:
        
         /**
          * @return the number of data points in the volume
         */
         int size();
-        
+        /**
+         * 
+         * return a 3 element array with the xDim yDim zDim (really should be called Res)
+         */
+        int* getDim();
         /**
          * Used to set the value at a certin location to a the passed in Value
          * @param x = The X-coridinate

@@ -8,7 +8,7 @@ Volume::Volume(double bot[], double top[], int count[]) {
         max[i] = top[i];
         res[i] = count[i];
     }
-    size = (max[0] - min[0]) / (double)res[0];
+    size = (max[0] - min[0] + 1) / (double)res[0]; // added a +1 Don't know if it is needed
 }
 
 Volume::~Volume() {}
@@ -42,7 +42,7 @@ void Volume::loadFireData(send_vol_data svd)
     vector<volume_data> vd = svd.getVolData();
     for(size_t i = 0 ; i < vd.size();i++)
     {
-        Field * f = new Field();
+        Field * f = new Field(vd[i].getDim());
         f->setValues(vd[i].getVolData());
         fields.push_back(f);
     }
