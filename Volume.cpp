@@ -8,7 +8,7 @@ Volume::Volume(double bot[], double top[], int count[]) {
         max[i] = top[i];
         res[i] = count[i];
     }
-    size = (max[0] - min[0] + 1) / (double)res[0]; // added a +1 Don't know if it is needed
+    size = (max[0] - min[0]) / (double)res[0]; // added a +1 Don't know if it is needed
 }
 
 Volume::~Volume() {}

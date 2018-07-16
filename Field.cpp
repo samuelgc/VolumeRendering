@@ -13,7 +13,7 @@ double Field::sample(double pos[3]) {
     int x = pos[0];
     int y = pos[1];
     int z = pos[2];
-    // cout << " x = " << x << " y = " << y << " z = " << z << endl; 
+    cout << " x = " << x << " y = " << y << " z = " << z << endl; 
     if(x < 0 || y < 0 || z < 0){
         // cout << "out of bounds below" << endl;
         return -1;

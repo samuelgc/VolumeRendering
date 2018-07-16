@@ -12,11 +12,22 @@ class send_vol_data
     private:
         std::vector<volume_data> vol_dat;
         std::vector<std::string> vol_names;
+        int res[3];
+        double bounds[6];
     public:
-        send_vol_data(std::vector<volume_data> vd , std::vector<std::string> vn)
+        send_vol_data(std::vector<volume_data> vd , std::vector<std::string> vn, int resolution[3],double b[6])
         {
             vol_dat = vd;
             vol_names = vn;
+            res[0] = resolution[0];
+            res[1] = resolution[1];
+            res[2] = resolution[2];
+            bounds[0] = b[0];
+            bounds[1] = b[1];
+            bounds[2] = b[2];
+            bounds[3] = b[3];
+            bounds[4] = b[4];
+            bounds[5] = b[5];
         }
         std::vector<volume_data> getVolData()
         {
@@ -26,6 +37,14 @@ class send_vol_data
         {
             return vol_names;
         }
+        int* getReso()
+        {
+            return res;
+        }
+        double* getBounds()
+        {
+            return bounds;
+        }
 };
 
 //used for debugging
@@ -34,6 +53,7 @@ void print(std::string s);
 void print(int i);
 //yay
 send_vol_data getAllData(std::string filename);
+void getBounds(Json::Value info,double bounds[6]);
 /**
  * used to read and set the x,y,z dimensions
  * @param string info contains the line from the json file with key "volume_summary" 

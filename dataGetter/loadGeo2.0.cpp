@@ -24,13 +24,16 @@ send_vol_data getAllData(string filename)
     jsonFile >> root; 
     // cout << "Getting VOLUME INFO" << endl;
     string volume_info =  root[11]["volume_summary"].asString();
+    double bounds[6];
+    getBounds(root[11],bounds);
     loadDimensions(volume_info); // get the dimensions
     vector<string> vDtypes = getNameMapping(root[11]["volume_summary"].asString()); // gets the different kind of data stored as voxels.
     Json::Value allVoxelData = root[21];
     vector<volume_data> allVoxData = getAllVolumeData(allVoxelData,vDtypes);
     // cout << "DATA READ" << endl;
     // cout << "SAVING DATA" << endl;
-    send_vol_data svd = send_vol_data(allVoxData,vDtypes);
+    int res2send[] = {xDim,yDim,zDim};
+    send_vol_data svd = send_vol_data(allVoxData,vDtypes,res2send,bounds);
     // allVoxData[0].writeSlice();
     return svd;
 }
@@ -48,6 +51,15 @@ send_vol_data getAllData(string filename)
 //     allVoxData[0].writeSlice();
 //     return 0;
 // }
+void getBounds(Json::Value info,double bounds[6])
+{
+    bounds[0] = info["bounds"][0].asDouble();
+    bounds[1] = info["bounds"][1].asDouble();
+    bounds[2] = info["bounds"][2].asDouble();
+    bounds[3] = info["bounds"][3].asDouble();
+    bounds[4] = info["bounds"][4].asDouble();
+    bounds[5] = info["bounds"][5].asDouble();
+}
 void setVolData(Json::Value tile,volume_data &v,int xOff,int yOff,int zOff,string compr)
 {
     int x_start = xOff * 16;

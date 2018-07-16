@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <iomanip>
 #include "Renderer.h"
 #include "Volume.h"
 #include "dataGetter/loadGeo2.0.h"
@@ -23,6 +23,9 @@ using namespace std;
 // }
 void runTest();
 void test1();
+void test2();
+void test3();
+void test4();
 void printFailed(string msg);
 void printSuccess(string msg);
 int main(int argc, char *argv[]) {
@@ -54,15 +57,176 @@ int main(int argc, char *argv[]) {
 
 void runTest()
 {
-    test1();
+    // test1();
+    // test2();
+    // test3();
+    test4();
 }
-void test1()
+void test4()
 {
     cout << "Testing \033[1mhelp.json \033[0m\n";
     string testname_1 = "help.json";
     send_vol_data svd = getAllData(testname_1);
+    double * bounds = svd.getBounds();
+    int * res = svd.getReso();
+    double bot1[] = {bounds[0],bounds[2],bounds[4]};
+    double top1[] = {bounds[1],bounds[3],bounds[5]};
+    Volume vol = Volume(bot1,top1,res);
+    vol.loadFireData(svd);
+    double scale = (top1[0] - bot1[0]) / res[0];
+    double pos2[] = {-1.64999,-0.75,-1.75};
+    double endInd[3];
+    for(size_t i = 0 ; i < 3; i++)
+    {
+        endInd[i] = top1[i] - scale;
+    }
+    
+    double res0 = vol.sample(bot1,0);
+    double res1 = vol.sample(endInd,0);
+    double res2 = vol.sample(pos2,0);
+    cout << setprecision(9) << res2 << endl;
+    cout << scale << endl;
+    double exp0 = 1.62603939e-18;
+    double exp1 = 0;
+    double exp2 = 3.78290172e-21;
+    int test_bounds = 0;
+    if(res0 == exp0) test_bounds++;
+    else printFailed("Bound Test 0 failed");
+    if(res1 == exp1) test_bounds++;
+    else printFailed("Bound Test 1 failed");
+    if(res2 == exp2) test_bounds++;
+    else printFailed("Bound Test 2 failed");
+    if(test_bounds == 3) printSuccess("3/3 test passed");
+        else printFailed(to_string(test_bounds) + "/3 test passed");
+
+}
+void test3()
+{
+    cout << "Testing \033[1mhelp.json \033[0m\n";
+    string testname_1 = "help.json";
+    send_vol_data svd = getAllData(testname_1);
+    // not left bottom at (0,0,0)
+    double bot1_1[] = {-34,-29,-34};
+    double top1_1[] = {35,50,35};
+    int res1_1[] = {35,30,35};
+    Volume vol = Volume(bot1_1,top1_1,res1_1);
+    vol.loadFireData(svd);
+    double pos0_1[] = {-34,-29,-34}; // first index
+    double pos1_1[] = {-32,-29,-34}; // second index
+    double pos2_1[] = {-2,-29,-34}; // first index 2nd tile
+    double pos3_1[] = {28,1,-4}; // last index 2nd tile
+    double pos4_1[] = {34,29,34}; // last index all tiles
+    double pos5_1[] = {0,0,-36}; // out of bounds below
+    double pos6_1[] = {0,32,0}; // out of bounds above
+    double pos7_1[] = {-34,-27,-34}; // 16th index
+    cout << "Testing Density \n";
+    //Results
+    double res0_1_0 = vol.sample(pos0_1,0);
+    double res1_1_0 = vol.sample(pos1_1,0);
+    double res2_1_0 = vol.sample(pos2_1,0);
+    double res3_1_0 = vol.sample(pos3_1,0);
+    double res4_1_0 = vol.sample(pos4_1,0);
+    double res5_1_0 = vol.sample(pos5_1,0);
+    double res6_1_0 = vol.sample(pos6_1,0);
+    double res7_1_0 = vol.sample(pos7_1,0);
+    //Expected
+    double exp0_0 = 1.62603939e-18;
+    double exp1_0 = 3.78290172e-21;
+    double exp2_0 = 4.00170194e-07;
+    double exp3_0 = 0.00473240018;
+    double exp4_0 = 0;
+    double exp5_0 = -1;
+    double exp6_0 = -1;
+    double exp7_0 = 6.06725192e-19;
+    int density_good_1 = 0;
+    if(res0_1_0 == exp0_0) density_good_1++;
+    else printFailed("Test 1_2.0 failed");
+    if(res1_1_0 == exp1_0) density_good_1++;
+    else printFailed("Test 1_2.1 failed");
+    if(res2_1_0 == exp2_0) density_good_1++;
+    else printFailed("Test 1_2.2 failed");
+    if(res3_1_0 == exp3_0) density_good_1++;
+    else printFailed("Test 1_2.3 failed");
+    if(res4_1_0 == exp4_0) density_good_1++;
+    else printFailed("Test 1_2.4 failed");
+    if(res5_1_0 == exp5_0) density_good_1++;
+    else printFailed("Test 1_2.5 failed");
+    if(res6_1_0 == exp6_0) density_good_1++;
+    else printFailed("Test 1_2.6 failed");
+    if(res7_1_0 == exp7_0) density_good_1++;
+    else printFailed("Test 1_2.7 failed");
+    if(density_good_1 == 8) printSuccess("8/8 test passed");
+    else printFailed(to_string(density_good_1) + "/8 test passed");
+}
+void test2()
+{
+    //Testing where voxel is not one pixel in world space.
+    cout << "Testing \033[1mhelp.json \033[0m\n";
+    string testname_1 = "help.json";
+    send_vol_data svd = getAllData(testname_1);
     double bot1[] = {0,0,0};
-    double top1[] = {34,29,34};
+    double top1[] = {70,60,60};
+    int * res1 = svd.getReso();
+    Volume vol = Volume(bot1,top1,res1);
+    vol.loadFireData(svd);
+    double pos0[] = {0,0,0}; // first index
+    double pos1[] = {2,0,0}; // second index
+    double pos2[] = {32,0,0}; // first index 2nd tile
+    double pos3[] = {62,30,30}; // last index 2nd tile
+    double pos4[] = {68,58,68}; // last index all tiles
+    double pos5[] = {0,0,-2}; // out of bounds below
+    double pos6[] = {0,60,0}; // out of bounds above
+    double pos7[] = {0,2,0}; // 16th index
+    //Density Checking
+    cout << "Testing Density \n";
+    //Results
+    double res0_0 = vol.sample(pos0,0);
+    double res1_0 = vol.sample(pos1,0);
+    double res2_0 = vol.sample(pos2,0);
+    double res3_0 = vol.sample(pos3,0);
+    double res4_0 = vol.sample(pos4,0);
+    double res5_0 = vol.sample(pos5,0);
+    double res6_0 = vol.sample(pos6,0);
+    double res7_0 = vol.sample(pos7,0);
+    //Expected
+    double exp0_0 = 1.62603939e-18;
+    double exp1_0 = 3.78290172e-21;
+    double exp2_0 = 4.00170194e-07;
+    double exp3_0 = 0.00473240018;
+    double exp4_0 = 0;
+    double exp5_0 = -1;
+    double exp6_0 = -1;
+    double exp7_0 = 6.06725192e-19;
+    int density_good = 0;
+    if(res0_0 == exp0_0) density_good++;
+    else printFailed("Test 1_1.0 failed");
+    if(res1_0 == exp1_0) density_good++;
+    else printFailed("Test 1_1.1 failed");
+    if(res2_0 == exp2_0) density_good++;
+    else printFailed("Test 1_1.2 failed");
+    if(res3_0 == exp3_0) density_good++;
+    else printFailed("Test 1_1.3 failed");
+    if(res4_0 == exp4_0) density_good++;
+    else printFailed("Test 1_1.4 failed");
+    if(res5_0 == exp5_0) density_good++;
+    else printFailed("Test 1_1.5 failed");
+    if(res6_0 == exp6_0) density_good++;
+    else printFailed("Test 1_1.6 failed");
+    if(res7_0 == exp7_0) density_good++;
+    else printFailed("Test 1_1.7 failed");
+    if(density_good == 8) printSuccess("8/8 test passed");
+    else printFailed(to_string(density_good) + "/8 test passed");
+
+    
+}
+void test1()
+{
+    //Testing where voxel is one pixel in world space.
+    cout << "Testing \033[1mhelp.json \033[0m\n";
+    string testname_1 = "help.json";
+    send_vol_data svd = getAllData(testname_1);
+    double bot1[] = {0,0,0};
+    double top1[] = {35,30,35};
     int res1[] = {35,30,35};
     Volume vol = Volume(bot1,top1,res1);
     vol.loadFireData(svd);
