@@ -34,5 +34,27 @@ double Integrator::intersect(double orig[], double d[], Volume* box) {
 
 void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
     // TODO: Here's the part where we shoot the ray through and get the color back
+    vector<Volume*> hit;
+    for(Volume* vol : objs) {
+        if(intersect(orig, d, vol) != -1)
+            hit.push_back(vol);
+    }
+    if(!hit.empty()) {
+        // Not sure how to handle hitting multiple volumes actually... need to think about it
+    }
+}
 
+double* Integrator::radiance(double pos[], double dir[], Volume* v) {
+    Material* m = v->getMat();
+
+    double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
+    double* smokecolor = m->dense_color();
+    for(int i = 0; i < 3; i++)
+        smokecolor[i] *= m->dense_intense();
+    
+    double emit = m->temp_intense() * v->sample(pos, 1); // Sample heat?
+    double temp = m->fire_intense() * v->sample(pos, 2); // Sample temperature?
+    temp *= m->kelvin_temp();
+
+    // Perform blackbody mapping from temperature to RGB
 }

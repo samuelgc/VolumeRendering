@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Field.h"
+#include "Material.h"
 
 using namespace std;
 
@@ -48,6 +49,11 @@ public:
     void addField(string name);
 
     /**
+     * Returns the Material associated with this Volume
+     */
+    Material* getMat();
+
+    /**
      * Returns the min bounds of the volume
      */
     double* getMin();
@@ -58,6 +64,8 @@ public:
     double* getMax();
 
 private:
+
+    Material* mat;
 
     // Fields
     vector<string> field_names;

@@ -9,6 +9,7 @@ Volume::Volume(double bot[], double top[], int count[]) {
         res[i] = count[i];
     }
     size = (max[0] - min[0]) / (double)res[0];
+    mat = new Material();
 }
 
 Volume::~Volume() {}
@@ -27,6 +28,10 @@ string Volume::name(int field) {
 void Volume::addField(string name) {
     field_names.push_back(name);
     fields.push_back(new Field(res));
+}
+
+Material* Volume::getMat() {
+    return mat;
 }
 
 double* Volume::getMin() {

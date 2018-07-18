@@ -37,6 +37,16 @@ public:
      */
     void integrate(double orig[], double d[], vector<Volume*> objs, double result[]);
 
+    /**
+     * Computes the radiance at the given position with the incoming
+     * ray specified
+     * 
+     * @param double pos[] - position to calculate radiance for
+     * @param double dir[] - direction of incoming ray
+     * @param Volume* obj - the volume to sample radiance from
+     */ 
+    double* radiance(double pos[], double dir[], Volume* obj);
+
 };
 
 
