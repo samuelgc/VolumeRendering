@@ -7,6 +7,7 @@ Camera::Camera() {
         if (i < 2)
             res[i] = 1024;
     }
+    origin[1] = 2;
     origin[2] = 10;
 }
 
