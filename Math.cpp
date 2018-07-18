@@ -13,6 +13,11 @@ void subtract(double a[], double b[]) {
         b[i] = b[i] - a[i];
 }
 
+void scale(double a[], double s) {
+    for(int i = 0; i < 3; i++) 
+        a[i] *= s;
+}
+
 Matrix* mat_mult(Matrix* a, Matrix* b) {
     Matrix* result = new Matrix();
     for(int i = 0; i < 4; i++) {

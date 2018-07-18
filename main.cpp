@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 #include "Renderer.h"
 
@@ -11,6 +13,8 @@ int main(int argc, char *argv[]) {
              << "Error -- Incorrect number of arguments.\n";
         return 1;
     }
+
+    srand(time(NULL));
 
     Renderer* vrender = new Renderer();
     vrender->loadScene(argv[1]);

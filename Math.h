@@ -26,6 +26,14 @@ double dist(double a[], double b[]);
  */
 void subtract(double a[], double b[]);
 
+/**
+ * Scales vector a by value s
+ * 
+ * @param a - vector
+ * @param s - scalar value
+ */
+void scale(double a[], double s);
+
 /// Matrix Math ///
 
 /**
