@@ -31,7 +31,9 @@ void Renderer::render() {
             point[0] = old_x;
             scene->transform(point);
             subtract(scene->origin(), point);
-            march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+            for(int i = 0; i < 64; i++)
+                march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+            scale(rgb, 0.015625);
             addPixel(rgb);
             old_x += i;
         }

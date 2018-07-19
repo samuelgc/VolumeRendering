@@ -18,6 +18,11 @@ void scale(double a[], double s) {
         a[i] *= s;
 }
 
+void move(double o[], double d[], double t, double res[]) {
+    for(int i = 0; i < 3; i++)
+        res[i] = o[i] + d[i] * t;
+}
+
 Matrix* mat_mult(Matrix* a, Matrix* b) {
     Matrix* result = new Matrix();
     for(int i = 0; i < 4; i++) {

@@ -63,6 +63,11 @@ public:
      */
     double* getMax();
 
+    /**
+     * Returns the side length of a voxel
+     */
+    double getSize();
+
 private:
 
     Material* mat;

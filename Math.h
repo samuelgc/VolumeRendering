@@ -34,6 +34,16 @@ void subtract(double a[], double b[]);
  */
 void scale(double a[], double s);
 
+/**
+ * Moves a point along parametrized ray to location at t
+ *
+ * @param o - origin
+ * @param d - direction of ray
+ * @param t - time
+ * @param res - resulting location
+ */
+void move(double o[], double d[], double t, double res[]);
+
 /// Matrix Math ///
 
 /**

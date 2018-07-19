@@ -41,3 +41,7 @@ double* Volume::getMin() {
 double* Volume::getMax() {
     return max;
 }
+
+double Volume::getSize() {
+    return size;
+}

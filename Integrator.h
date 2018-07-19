@@ -22,9 +22,10 @@ public:
      * @param double orig[] - ray origin
      * @param double d[] - ray direction
      * @param Volume* box - bounding box to intersect against
+     * @param double *t_far - exiting intersecinot with bbox
      * @return the nearest point of intersection on bbox surface
      */
-    double intersect(double orig[], double d[], Volume* box);
+    double intersect(double orig[], double d[], Volume* box, double *t_far);
 
     /**
      * Performs a raymarch for the given ray from the orig in direction d

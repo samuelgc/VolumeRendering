@@ -8,9 +8,9 @@ Integrator::Integrator() {}
 
 Integrator::~Integrator(){}
 
-double Integrator::intersect(double orig[], double d[], Volume* box) {
+double Integrator::intersect(double orig[], double d[], Volume* box, double *t_far) {
     double t_near = -INFINITY;
-    double t_far = INFINITY;
+    *t_far = INFINITY;
     double t1, t2;
     for(int i = 0; i < 3; i++) {
         if(d[i] == 0) {
@@ -26,69 +26,69 @@ double Integrator::intersect(double orig[], double d[], Volume* box) {
         }
         if(t1 > t_near)
             t_near = t1;
-        if(t2 < t_far)
-            t_far = t2;
-        if(t_near > t_far)
+        if(t2 < *t_far)
+            *t_far = t2;
+        if(t_near > *t_far)
             return -1;
-        if(t_far < 0)
+        if(*t_far < 0)
             return -1;
     }
     return t_near;
 }
 
 void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
-    // TODO: Here's the part where we shoot the ray through and get the color back
-    vector<Volume*> hit;
-    for(Volume* vol : objs) {
-        if(intersect(orig, d, vol) != -1)
-            hit.push_back(vol);
-    }
-    // TODO: Move x until it actually hits some density or exit if it hits nothing
+    Volume* vol = objs.at(0);
+    double eor = 0;
+    double t = intersect(orig, d, vol, &eor);
+    if(t == -1)
+        return;
     double pos[3] = {orig[0], orig[1], orig[2]};
     double density = 0;
     while(density <= 0) {
-        
+        t += vol->getSize();
+        move(orig, d, t, pos);
+        density = vol->sample(pos, 0);
+        if(t > eor)
+            return;
     }
-    // Move along until it hits non zero?
-    if(!hit.empty()) {
-        double wig = 0;
-        double t = 1;
-        // Not sure how to handle hitting multiple volumes actually... need to think about it
-        double w[3] = {d[0], d[1], d[2]};
-        while(true) {
-            wig = (double)rand() / RAND_MAX;
-            // t = -1.0 * log(1.0 - wig) / majorant...
-            // if(t > end_of_ray) 
-            //      return;
-            // subtract(pos, scaled(w, t));
-            // if(wig < absorption_probablity_at_current_location) {
-            //     sum(result, radiance(pos, w, hit.at(0)));
-            //     return;
-            // } else if (wig < 1 - scattering_probability_at_current_location)
-            //      update w based on phase function (isotropic)
-            //      update the end_of_ray
-            // } else
-            //      end_of_ray = end_of_ray - t
-        }
+
+    double wig = 0;
+    double w[3] = {d[0], d[1], d[2]};
+    while(true) {
+        wig = (double)rand() / RAND_MAX;
+        // t = -1.0 * log(1.0 - wig);
+        // if(t > end_of_ray)
+        //      return;
+        // subtract(pos, scaled(w, t));
+        // if(wig < absorption_probablity_at_current_location) {
+        //     sum(result, radiance(pos, w, hit.at(0)));
+        //     return;
+        // } else if (wig < 1 - scattering_probability_at_current_location)
+        //      update w based on phase function (isotropic)
+        //      update the end_of_ray
+        // } else
+        //      end_of_ray = end_of_ray - t
     }
 }
 
 double* Integrator::radiance(double pos[], double dir[], Volume* v) {
     Material* m = v->getMat();
+    double rgb[3] = {0,0,0};
 
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
-    double* smokecolor = m->dense_color();
-    for(int i = 0; i < 3; i++)
-        smokecolor[i] *= m->dense_intense();
-    
     double emit = m->temp_intense() * v->sample(pos, 1); // Sample heat?
+    if(emit == 0) {
+        for(int i = 0; i < 3; i++)
+            rgb[i] = m->dense_color()[i] * m->dense_intense();
+        scale(rgb, density);
+        return rgb;
+    }
+
     double temp = m->fire_intense() * v->sample(pos, 2); // Sample temperature?
     temp *= m->kelvin_temp();
 
     // Perform blackbody mapping from temperature to RGB
     temp /= 100;
-    double rgb[3] = {0,0,0};
-    
     if(temp <= 66) {
         rgb[0] = 255;
 
@@ -123,5 +123,6 @@ double* Integrator::radiance(double pos[], double dir[], Volume* v) {
         rgb[1] = 255;
 
     scale(rgb, 0.00392156863);
+    scale(rgb, density); // Do this?
     return rgb;
 }
