@@ -1,4 +1,5 @@
 #include "Volume.h"
+#include "Material.h"
 
 Volume::Volume() {}
 
@@ -8,7 +9,8 @@ Volume::Volume(double bot[], double top[], int count[]) {
         max[i] = top[i];
         res[i] = count[i];
     }
-    size = (max[0] - min[0]) / (double)res[0]; // added a +1 Don't know if it is needed
+    size = (max[0] - min[0]) / (double)res[0];
+    mat = new Material();
 }
 
 Volume::~Volume() {}
@@ -29,6 +31,10 @@ void Volume::addField(string name) {
     fields.push_back(new Field(res));
 }
 
+Material* Volume::getMat() {
+    return mat;
+}
+
 double* Volume::getMin() {
     return min;
 }
@@ -46,4 +52,8 @@ void Volume::loadFireData(send_vol_data svd)
         f->setValues(vd[i].getVolData());
         fields.push_back(f);
     }
+}
+
+double Volume::getSize() {
+    return size;
 }

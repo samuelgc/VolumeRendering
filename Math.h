@@ -19,12 +19,53 @@ const double PI = 3.14159265359;
 double dist(double a[], double b[]);
 
 /**
+ * Return the length of vector a
+ *
+ * @param a - vector
+ * @return
+ */
+double len(double a[]);
+
+/**
+ * Adds the vector b to a
+ *
+ * @param a - vector
+ * @param b - vector
+ */
+void sum(double a[], double b[]);
+
+/**
  * Subtracts a from b (i.e. b - a)
  * 
  * @param a - vector
  * @param b - vector
  */
 void subtract(double a[], double b[]);
+
+/**
+ * Scales vector a by value s
+ * 
+ * @param a - vector
+ * @param s - scalar value
+ */
+void scale(double a[], double s);
+
+/**
+ * Normalizes the vector given
+ *
+ * @param a - vector
+ */
+void normalize(double a[]);
+
+/**
+ * Moves a point along parametrized ray to location at t
+ *
+ * @param o - origin
+ * @param d - direction of ray
+ * @param t - time
+ * @param res - resulting location
+ */
+void move(double o[], double d[], double t, double res[]);
 
 /// Matrix Math ///
 

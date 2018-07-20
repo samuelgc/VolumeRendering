@@ -70,7 +70,7 @@ void Scene::setTransform() {
     for(int i = 0; i < 3; i++)
         point[i] = cam->getOrigin()[i] - cam->getOrient()[i];
 
-    // Rotate around Y
+    // Rotate around Y --- THIS MIGHT BE WRONG BECAUSE OF DIRECTION OF Z
     double theta = -1.0 * (atan2(point[2], point[0]) * (180.0 / PI) + 90.0);
     double theta_x = -1.0 * theta;
     double sin_t = sin(theta);

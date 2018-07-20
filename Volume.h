@@ -6,6 +6,7 @@
 #include <string>
 #include "dataGetter/loadGeo2.0.h"
 #include "Field.h"
+#include "Material.h"
 
 using namespace std;
 
@@ -48,6 +49,11 @@ public:
     void addField(string name);
 
     /**
+     * Returns the Material associated with this Volume
+     */
+    Material* getMat();
+
+    /**
      * Returns the min bounds of the volume
      */
     double* getMin();
@@ -63,7 +69,14 @@ public:
     // void setAllNames(vector<string> fn);
     void loadFireData(send_vol_data svd);
 
+    /**
+     * Returns the side length of a voxel
+     */
+    double getSize();
+
 private:
+
+    Material* mat;
 
     // Fields
     vector<string> field_names;

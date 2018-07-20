@@ -8,9 +8,37 @@ double dist(double a[], double b[]){
     return sqrt(sum);
 }
 
+double len(double a[]) {
+    double length = 0;
+    for(int i = 0; i < 3; i++)
+        length += a[i] * a[i];
+    return sqrt(length);
+}
+
+void sum(double a[], double b[]) {
+    for(int i = 0; i < 3; i++)
+        a[i] += b[i];
+}
+
 void subtract(double a[], double b[]) {
     for(int i = 0; i < 3; i++)
         b[i] = b[i] - a[i];
+}
+
+void scale(double a[], double s) {
+    for(int i = 0; i < 3; i++) 
+        a[i] *= s;
+}
+
+void normalize(double a[]) {
+    double div = len(a);
+    for(int i = 0; i < 3; i++)
+        a[i] /= div;
+}
+
+void move(double o[], double d[], double t, double res[]) {
+    for(int i = 0; i < 3; i++)
+        res[i] = o[i] + d[i] * t;
 }
 
 Matrix* mat_mult(Matrix* a, Matrix* b) {
