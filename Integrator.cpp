@@ -42,8 +42,18 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     double t = intersect(orig, d, vol, &eor);
     if(t == -1)
         return;
-    double pos[3] = {orig[0], orig[1], orig[2]};
-    double density = 0;
+
+    // Move intersections to edges of the volume
+    double pos[3] = {0, 0, 0};
+    move(orig, d, eor, pos);
+    double density = vol->sample(pos, 0);
+    while(density <= 0) {
+        eor -= vol->getSize();
+        move(orig, d, eor, pos);
+        density = vol->sample(pos, 0);
+    }
+    move(orig, d, t, pos);
+    density = vol->sample(pos, 0);
     while(density <= 0) {
         t += vol->getSize();
         move(orig, d, t, pos);
@@ -52,22 +62,32 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             return;
     }
 
+    // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
+    eor -= t;
     while(true) {
         wig = (double)rand() / RAND_MAX;
-        // t = -1.0 * log(1.0 - wig);
-        // if(t > end_of_ray)
-        //      return;
-        // subtract(pos, scaled(w, t));
-        // if(wig < absorption_probablity_at_current_location) {
-        //     sum(result, radiance(pos, w, hit.at(0)));
-        //     return;
-        // } else if (wig < 1 - scattering_probability_at_current_location)
-        //      update w based on phase function (isotropic)
-        //      update the end_of_ray
-        // } else
-        //      end_of_ray = end_of_ray - t
+        if(wig > eor)
+            return;
+        move(pos, w, wig, pos);
+        if(wig < .4) {
+            sum(result, radiance(pos, w, vol));
+            return;
+        } else if (wig < 1 - .2) {
+            eor = dist(vol->getMin(), vol->getMax());
+            move(pos, w, eor, orig);
+            density = vol->sample(orig, 0);
+            while(density <= 0) {
+                eor -= vol->getSize();
+                move(pos, w, eor, orig);
+                density = vol->sample(orig, 0);
+            }
+            for(int i = 0; i < 3; i++)
+                w[i] = (double)rand() / RAND_MAX;
+            normalize(w);
+        } else
+            eor -= wig;
     }
 }
 

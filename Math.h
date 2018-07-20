@@ -19,6 +19,22 @@ const double PI = 3.14159265359;
 double dist(double a[], double b[]);
 
 /**
+ * Return the length of vector a
+ *
+ * @param a - vector
+ * @return
+ */
+double len(double a[]);
+
+/**
+ * Adds the vector b to a
+ *
+ * @param a - vector
+ * @param b - vector
+ */
+void sum(double a[], double b[]);
+
+/**
  * Subtracts a from b (i.e. b - a)
  * 
  * @param a - vector
@@ -33,6 +49,13 @@ void subtract(double a[], double b[]);
  * @param s - scalar value
  */
 void scale(double a[], double s);
+
+/**
+ * Normalizes the vector given
+ *
+ * @param a - vector
+ */
+void normalize(double a[]);
 
 /**
  * Moves a point along parametrized ray to location at t
