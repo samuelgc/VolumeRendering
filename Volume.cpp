@@ -52,6 +52,17 @@ void Volume::loadFireData(send_vol_data svd)
         f->setValues(vd[i].getVolData());
         fields.push_back(f);
     }
+    double * temp_bounds = svd.getBounds();
+    cout <<"x" << temp_bounds[0] << "y" << temp_bounds[1] << "z" << temp_bounds[2] << "x" << temp_bounds[3] << "y" << temp_bounds[4] << "z" << temp_bounds[5] << endl;
+    int * temp_res = svd.getReso();
+    for(int i = 0 ; i < 3 ; i++)
+    {
+        min[i] = temp_bounds[i];
+        max[i] = temp_bounds[i+3];
+        res[i] = temp_res[i];
+    }
+    for(int i = 0 ; i < 3;i++)
+        cout <<" min="<<min[i] << " max=" << max[i] << endl;
 }
 
 double Volume::getSize() {
