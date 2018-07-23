@@ -57,8 +57,8 @@ void Volume::loadFireData(send_vol_data svd)
     int * temp_res = svd.getReso();
     for(int i = 0 ; i < 3 ; i++)
     {
-        min[i] = temp_bounds[i];
-        max[i] = temp_bounds[i+3];
+        min[i] = temp_bounds[i*2];
+        max[i] = temp_bounds[i*2+1];
         res[i] = temp_res[i];
     }
     for(int i = 0 ; i < 3;i++)
@@ -67,4 +67,13 @@ void Volume::loadFireData(send_vol_data svd)
 
 double Volume::getSize() {
     return size;
+}
+
+string Volume::toString() {
+    string result = "";
+    for(string name : field_names) {
+        result += name;
+        result += " ";
+    }
+    return result;
 }

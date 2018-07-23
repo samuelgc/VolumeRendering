@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
     Renderer* vrender = new Renderer();
     vrender->loadScene(argv[1]);
     vrender->render();
+    
     vrender->write(argv[2]);
 
     return 0;

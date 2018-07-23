@@ -74,6 +74,11 @@ public:
      */
     double getSize();
 
+    /**
+     * Returns the names of the fields in order
+     */
+    string toString();
+
 private:
 
     Material* mat;

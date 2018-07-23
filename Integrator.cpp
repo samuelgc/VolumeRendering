@@ -40,17 +40,21 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     Volume* vol = objs.at(0);
     double eor = 0;
     double t = intersect(orig, d, vol, &eor);
-    if(t == -1)
+    if(t < 0) {
         return;
+    }
 
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
     double density = vol->sample(pos, 0);
+        cout << "Density: " << density << "\n";
     while(density <= 0) {
         eor -= vol->getSize();
         move(orig, d, eor, pos);
         density = vol->sample(pos, 0);
+        if(eor < t)
+            return;
     }
     move(orig, d, t, pos);
     density = vol->sample(pos, 0);
@@ -58,10 +62,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         t += vol->getSize();
         move(orig, d, t, pos);
         density = vol->sample(pos, 0);
-        if(t > eor)
-            return;
     }
-
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -72,7 +73,9 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             return;
         move(pos, w, wig, pos);
         if(wig < .4) {
-            sum(result, radiance(pos, w, vol));
+            double rgb[3] = {density,density,density};
+            //radiance(pos, w, vol, rgb);
+            sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
             eor = dist(vol->getMin(), vol->getMax());
@@ -91,20 +94,19 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     }
 }
 
-double* Integrator::radiance(double pos[], double dir[], Volume* v) {
+void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     Material* m = v->getMat();
-    double rgb[3] = {0,0,0};
 
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
-    double emit = m->temp_intense() * v->sample(pos, 1); // Sample heat?
+    double emit = m->temp_intense() * v->sample(pos, 5); // Sample heat?
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
             rgb[i] = m->dense_color()[i] * m->dense_intense();
         scale(rgb, density);
-        return rgb;
+        return;
     }
 
-    double temp = m->fire_intense() * v->sample(pos, 2); // Sample temperature?
+    double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 
     // Perform blackbody mapping from temperature to RGB
@@ -144,5 +146,4 @@ double* Integrator::radiance(double pos[], double dir[], Volume* v) {
 
     scale(rgb, 0.00392156863);
     scale(rgb, density); // Do this?
-    return rgb;
 }

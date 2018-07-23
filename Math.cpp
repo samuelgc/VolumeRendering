@@ -36,6 +36,11 @@ void normalize(double a[]) {
         a[i] /= div;
 }
 
+void reset(double a[]) {
+    for(int i = 0; i < 3; i++)
+        a[i] = 0;
+}
+
 void move(double o[], double d[], double t, double res[]) {
     for(int i = 0; i < 3; i++)
         res[i] = o[i] + d[i] * t;

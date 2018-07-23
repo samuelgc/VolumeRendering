@@ -41,6 +41,11 @@ public:
     double* origin();
 
     /**
+     * Sets world coordinate of screen top left corner
+     */
+    void setCorner();
+
+    /**
      * return top left hand corner in world space
      */
     double* getCorner();
@@ -61,6 +66,13 @@ public:
      * @param p
      */
     void transform(double p[]);
+
+    /**
+     * Adds a volume to the scene
+     * 
+     * @param v - volume to add
+     */
+    void addVolume(Volume* v);
 
     /**
      * Returns a list of all the volumes in the scene

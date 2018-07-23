@@ -1,8 +1,10 @@
 #include "Scene.h"
-#include "Math.h"
 
 #include <iostream>
 #include <cmath>
+
+#include "Math.h"
+#include "dataGetter/loadGeo2.0.h"
 
 Scene::Scene() {
     cam = new Camera();
@@ -37,6 +39,14 @@ void Scene::parse(string filename) {
     cam = new Camera(lf, la, resx, resy);
 
     // TODO: potentially add lights
+    
+    // TODO: Read in Volumes
+    string fire_file;
+    file >> fire_file;
+    send_vol_data svd = getAllData(fire_file);
+    Volume* v = new Volume();
+    v->loadFireData(svd);
+    addVolume(v);
 
     file.close();
 }
@@ -51,6 +61,15 @@ int Scene::height() {
 
 double* Scene::origin() {
     return cam->getOrigin();
+}
+
+void Scene::setCorner() {
+    // Set size of screen in world units
+    double len = dist(cam->getOrigin(), cam->getOrient());
+    len *= tan(.48);
+    corner[0] = -1 * len;
+    corner[1] = len * (cam->getRes()[1] / cam->getRes()[0]);
+    inc = (len * 2.0) / cam->getRes()[0];
 }
 
 double* Scene::getCorner() {
@@ -108,16 +127,15 @@ void Scene::setTransform() {
     mult->set(2, 3, cam->getOrient()[2]);
     transfo = mat_mult(mult, transfo);
 
-    // Set size of screen in world units
-    double len = dist(cam->getOrigin(), cam->getOrient());
-    len *= atan(.2618);
-    corner[0] = -1 * len;
-    corner[1] = len * (cam->getRes()[1] / cam->getRes()[0]);
-    inc = (len * 2.0) / cam->getRes()[0];
+    setCorner();
 }
 
 void Scene::transform(double p[]) {
     transfo->multiply(p);
+}
+
+void Scene::addVolume(Volume* v) {
+    volumes.push_back(v);
 }
 
 vector<Volume*> Scene::getVolumes() {

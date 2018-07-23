@@ -58,6 +58,11 @@ void scale(double a[], double s);
 void normalize(double a[]);
 
 /**
+ * Sets all values of a to 0
+ */
+void reset(double a[]);
+
+/**
  * Moves a point along parametrized ray to location at t
  *
  * @param o - origin

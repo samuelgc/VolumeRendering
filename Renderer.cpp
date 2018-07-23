@@ -17,8 +17,8 @@ void Renderer::loadScene(string inFile) {
 }
 
 void Renderer::render() {
-    // Assume a camera field of view of 30 degrees
-    scene->setTransform();
+    // Assume a camera field of view of 45 degrees
+    scene->setCorner();
     double i = scene->getInc();
     double point[3] = {0, 0, 0};
     double rgb[3] = {0,0,0};
@@ -29,11 +29,13 @@ void Renderer::render() {
             point[2] = 0;
             point[1] = old_y;
             point[0] = old_x;
-            scene->transform(point);
+            //scene->transform(point);
             subtract(scene->origin(), point);
-            for(int i = 0; i < 64; i++)
-                march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
-            scale(rgb, 0.015625);
+            normalize(point);
+            reset(rgb);
+            //for(int i = 0; i < 64; i++)
+            march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+            //scale(rgb, 0.015625);
             addPixel(rgb);
             old_x += i;
         }
@@ -43,7 +45,7 @@ void Renderer::render() {
 
 void Renderer::write(string outFile) {
     ofstream file;
-    string filename = "output\\" + outFile;
+    string filename = "output/" + outFile;
     file.open(filename);
     file << "P3\n";
     file << scene->width() << " " << scene->height() << "\n";
