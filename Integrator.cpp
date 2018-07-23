@@ -48,8 +48,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
     double density = vol->sample(pos, 0);
-        cout << "Density: " << density << "\n";
-    while(density <= 0) {
+    while(density <= 0.00001) {
         eor -= vol->getSize();
         move(orig, d, eor, pos);
         density = vol->sample(pos, 0);
@@ -58,11 +57,12 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     }
     move(orig, d, t, pos);
     density = vol->sample(pos, 0);
-    while(density <= 0) {
+    while(density <= 0.00001) {
         t += vol->getSize();
         move(orig, d, t, pos);
         density = vol->sample(pos, 0);
     }
+
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -72,23 +72,26 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(wig > eor)
             return;
         move(pos, w, wig, pos);
-        if(wig < .4) {
-            double rgb[3] = {density,density,density};
+        if(wig < .4) {// was .4
+            double rgb[3] = {1,1,1};
             //radiance(pos, w, vol, rgb);
             sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
             eor = dist(vol->getMin(), vol->getMax());
+            for(int i = 0; i < 3; i++)
+                w[i] = (double)rand() / RAND_MAX -.5;
+            normalize(w);
             move(pos, w, eor, orig);
             density = vol->sample(orig, 0);
-            while(density <= 0) {
+            while(density <= 0.00001) {
                 eor -= vol->getSize();
                 move(pos, w, eor, orig);
                 density = vol->sample(orig, 0);
+                if(eor < wig) {
+                    return;
+                }
             }
-            for(int i = 0; i < 3; i++)
-                w[i] = (double)rand() / RAND_MAX;
-            normalize(w);
         } else
             eor -= wig;
     }

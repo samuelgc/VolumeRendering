@@ -63,6 +63,8 @@ void Volume::loadFireData(send_vol_data svd)
     }
     for(int i = 0 ; i < 3;i++)
         cout <<" min="<<min[i] << " max=" << max[i] << endl;
+    size = (max[0] - min[0]) / (double)res[0];
+    mat = new Material();
 }
 
 double Volume::getSize() {
