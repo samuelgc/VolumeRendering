@@ -47,22 +47,17 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    double density = vol->sample(pos, 0);
-    while(density <= 0.00001) {
+    while(vol->sample(pos, 0) <= 0.001) {
         eor -= vol->getSize();
         move(orig, d, eor, pos);
-        density = vol->sample(pos, 0);
         if(eor < t)
             return;
     }
-    move(orig, d, t, pos);
-    density = vol->sample(pos, 0);
-    while(density <= 0.00001) {
+    do {
         t += vol->getSize();
         move(orig, d, t, pos);
-        density = vol->sample(pos, 0);
-    }
-
+    } while(vol->sample(pos, 0) <= 0.001);
+    
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -71,6 +66,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         wig = (double)rand() / RAND_MAX;
         if(wig > eor)
             return;
+        move(pos, w, wig, orig);
         move(pos, w, wig, pos);
         if(wig < .4) {// was .4
             double rgb[3] = {1,1,1};
@@ -78,20 +74,15 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
-            eor = dist(vol->getMin(), vol->getMax());
+            eor = 0;
             for(int i = 0; i < 3; i++)
                 w[i] = (double)rand() / RAND_MAX -.5;
             normalize(w);
-            move(pos, w, eor, orig);
-            density = vol->sample(orig, 0);
-            while(density <= 0.00001) {
-                eor -= vol->getSize();
+            while(vol->sample(orig, 0) > 0.001) {
+                eor += vol->getSize();
                 move(pos, w, eor, orig);
-                density = vol->sample(orig, 0);
-                if(eor < wig) {
-                    return;
-                }
             }
+            eor -= vol->getSize();
         } else
             eor -= wig;
     }
