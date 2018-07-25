@@ -12,18 +12,22 @@ volume_data::volume_data(int dx, int dy, int dz)
     vol_data =  vector<vector<vector<double>>>(double(dx), vector<vector<double>>(double(dy), vector<double>(double(dz))));
     res[0] = dx;res[1] = dy;res[2] = dz;
 }
+
 void volume_data::setValue(double val,int dimX, int dimY, int dimZ)
 {
     vol_data[dimX][dimY][dimZ] = val;
 }
+
 int volume_data::size()
 {
     return dimX * dimY * dimZ;
 }
+
 int* volume_data::getDim()
 {
     return res;
 }
+
 void volume_data::writeSlice()
 {
     int filesize = 54 + 3*dimX*dimZ;
@@ -71,6 +75,7 @@ void volume_data::writeSlice()
     lol.close();
     std::fclose(fp);
 }
+
 vector<vector<vector<double>>> volume_data::getVolData()
 {
     return vol_data;

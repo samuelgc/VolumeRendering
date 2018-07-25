@@ -37,20 +37,7 @@ send_vol_data getAllData(string filename)
     // allVoxData[0].writeSlice();
     return svd;
 }
-// int main()
-// {
-    
-//     ifstream jsonFile("./temp.json",ifstream::binary);
-//     Json::Value root;
-//     jsonFile >> root; 
-//     string volume_info =  root[11]["volume_summary"].asString();
-//     loadDimensions(volume_info); // get the dimensions
-//     vector<string> vDtypes = getNameMapping(root[11]["volume_summary"].asString()); // gets the different kind of data stored as voxels.
-//     Json::Value allVoxelData = root[21];
-//     vector<volume_data> allVoxData = getAllVolumeData(allVoxelData,vDtypes);
-//     allVoxData[0].writeSlice();
-//     return 0;
-// }
+
 void getBounds(Json::Value info,double bounds[6])
 {
     bounds[0] = info["bounds"][0].asDouble();
@@ -60,6 +47,7 @@ void getBounds(Json::Value info,double bounds[6])
     bounds[4] = info["bounds"][4].asDouble();
     bounds[5] = info["bounds"][5].asDouble();
 }
+
 void setVolData(Json::Value tile,volume_data &v,int xOff,int yOff,int zOff,string compr)
 {
     int x_start = xOff * 16;
@@ -100,6 +88,7 @@ void setVolData(Json::Value tile,volume_data &v,int xOff,int yOff,int zOff,strin
         }
     }
 }
+
 volume_data getData4Volume(Json::Value vData)
 {
     volume_data vd1 = volume_data(xDim,yDim,zDim);
@@ -117,6 +106,7 @@ volume_data getData4Volume(Json::Value vData)
     }
     return vd1;
 }
+
 vector<volume_data>  getAllVolumeData(Json::Value allVoxelData,vector<string> vDtypes)
 {   
     vector<volume_data> volData;
@@ -127,14 +117,17 @@ vector<volume_data>  getAllVolumeData(Json::Value allVoxelData,vector<string> vD
     }
     return volData;
 }
+
 void print(string s)
 {
     cout << s << endl;
 }
+
 void print(int i)
 {
     cout << i << endl;
 }
+
 vector<string> getNameMapping(string s)
 {
     size_t found = s.find_first_of("(");
@@ -150,6 +143,7 @@ vector<string> getNameMapping(string s)
     }
     return names;    
 }
+
 //gets the X,Y,Z Dimensions
 void loadDimensions(string info)
 {

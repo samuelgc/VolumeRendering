@@ -53,7 +53,6 @@ void Volume::loadFireData(send_vol_data svd)
         fields.push_back(f);
     }
     double * temp_bounds = svd.getBounds();
-    cout <<"x" << temp_bounds[0] << "y" << temp_bounds[1] << "z" << temp_bounds[2] << "x" << temp_bounds[3] << "y" << temp_bounds[4] << "z" << temp_bounds[5] << endl;
     int * temp_res = svd.getReso();
     for(int i = 0 ; i < 3 ; i++)
     {
@@ -61,8 +60,7 @@ void Volume::loadFireData(send_vol_data svd)
         max[i] = temp_bounds[i*2+1];
         res[i] = temp_res[i];
     }
-    for(int i = 0 ; i < 3;i++)
-        cout <<" min="<<min[i] << " max=" << max[i] << endl;
+
     size = (max[0] - min[0]) / (double)res[0];
     mat = new Material();
 }

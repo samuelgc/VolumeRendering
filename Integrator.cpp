@@ -54,10 +54,11 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             return;
     }
     do {
-        t += vol->getSize();
         move(orig, d, t, pos);
+        t += vol->getSize();
     } while(vol->sample(pos, 0) <= 0.001);
-    
+    t -= vol->getSize();
+
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};

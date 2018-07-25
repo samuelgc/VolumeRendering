@@ -33,13 +33,13 @@ void Renderer::render() {
             subtract(scene->origin(), point);
             normalize(point);
             reset(rgb);
-            for(int i = 0; i < 10; i++)
-            march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
-            scale(rgb, 0.1);//015625);
+            for(int i = 0; i < 1; i++)
+                march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+            //scale(rgb, 0.1);//015625);
             addPixel(rgb);
-            cout << "Finished pixel x: " << x << " y: " << y << "\n";
             old_x += i;
         }
+        cout << "Finished pixels x: " << x << "\n";
         old_y -= i;
     }
 }
