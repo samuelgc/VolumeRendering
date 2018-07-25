@@ -18,7 +18,9 @@ void Renderer::loadScene(string inFile) {
 
 void Renderer::render() {
     // Assume a camera field of view of 45 degrees
+    cout << "ORIGIN x= " << scene->origin()[0] << " y= " << scene->origin()[1] << " z= " << scene->origin()[2] << "\n";
     scene->setCorner();
+    cout << "ORIGIN2 x= " << scene->origin()[0] << " y= " << scene->origin()[1] << " z= " << scene->origin()[2] << "\n";
     double i = scene->getInc();
     double point[3] = {0, 0, 0};
     double rgb[3] = {0,0,0};
@@ -33,8 +35,13 @@ void Renderer::render() {
             subtract(scene->origin(), point);
             normalize(point);
             reset(rgb);
+             cout << "ORIGIN3 x= " << scene->origin()[0] << " y= " << scene->origin()[1] << " z= " << scene->origin()[2] << "\n";
             for(int i = 0; i < 64; i++)
-            march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+            {
+                // cout << "Entering:x_" << x << "y_" << y << endl;
+                march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
+                // cout << "left yay " << endl;
+            }
             scale(rgb, 0.015625);
             addPixel(rgb);
             old_x += i;

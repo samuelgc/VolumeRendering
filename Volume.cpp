@@ -16,10 +16,11 @@ Volume::Volume(double bot[], double top[], int count[]) {
 Volume::~Volume() {}
 
 double Volume::sample(double pos[3], int field) {
+    double posTemp[3] = {0,0,0};
     for(int i = 0; i < 3; i++) {
-        pos[i] = (pos[i] - min[i]) / size;
+        posTemp[i] = (pos[i] - min[i]) / size;
     }
-    return fields.at(field)->sample(pos);
+    return fields.at(field)->sample(posTemp);
 }
 
 string Volume::name(int field) {

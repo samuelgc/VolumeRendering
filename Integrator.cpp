@@ -14,8 +14,12 @@ double Integrator::intersect(double orig[], double d[], Volume* box, double *t_f
     double t1, t2;
     for(int i = 0; i < 3; i++) {
         if(d[i] == 0) {
-            if(orig[i] < box->getMin()[i] || orig[i] > box->getMax()[i])
+            if(orig[i] < box->getMin()[i] || orig[i] > box->getMax()[i]){
+                cout << "the weird" << d[0] << " " << d[1] << " " << d[2] << endl;
                 return -1;
+            }
+            else
+                cout << "divide by zero?\n";
         }
         t1 = (box->getMin()[i] - orig[i]) / d[i];
         t2 = (box->getMax()[i] - orig[i]) / d[i];
@@ -28,10 +32,14 @@ double Integrator::intersect(double orig[], double d[], Volume* box, double *t_f
             t_near = t1;
         if(t2 < *t_far)
             *t_far = t2;
-        if(t_near > *t_far)
+        if(t_near > *t_far){
+            // cout << "ERROR in Integrator t_near > *t_far: t_near = " << t_near << " t_far = " << *t_far << "\n";
             return -1;
-        if(*t_far < 0)
+        }
+        if(*t_far < 0){
+            // cout << "ERROR in Integrator " << "t_far= " << *t_far << "\n";
             return -1;
+        }
     }
     return t_near;
 }
@@ -43,7 +51,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     if(t < 0) {
         return;
     }
-
+    // cout << "1" << endl;
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
@@ -55,19 +63,36 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(eor < t)
             return;
     }
+    // cout << "2" << endl;
     move(orig, d, t, pos);
     density = vol->sample(pos, 0);
+    int count = 0;
     while(density <= 0.00001) {
+        count++;
+        if(count > 100)
+        {
+            cout << "stuck in the second while loop" << t << " " << vol->getSize() << "\n";
+            cout << "POS " <<  pos[0] << " " << pos[1] << " " << pos[2] << " " << "\n";
+            
+            return;
+        }
         t += vol->getSize();
         move(orig, d, t, pos);
         density = vol->sample(pos, 0);
     }
-
+    // cout << "3" << endl;
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
     eor -= t;
+    count = 0;
     while(true) {
+        count++;
+        if(count > 100)
+            {
+                cout << "im in this loop\n";
+                return;
+            }
         wig = (double)rand() / RAND_MAX;
         if(wig > eor)
             return;
@@ -82,7 +107,9 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             for(int i = 0; i < 3; i++)
                 w[i] = (double)rand() / RAND_MAX -.5;
             normalize(w);
+            cout << "ORI4 x= " << orig[0] << " y= " << orig[1] << " z= " << orig[2] << "\n";
             move(pos, w, eor, orig);
+            cout << "ORI5 x= " << orig[0] << " y= " << orig[1] << " z= " << orig[2] << "\n";
             density = vol->sample(orig, 0);
             while(density <= 0.00001) {
                 eor -= vol->getSize();
@@ -95,6 +122,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         } else
             eor -= wig;
     }
+    
 }
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
