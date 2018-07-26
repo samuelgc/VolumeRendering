@@ -11,7 +11,7 @@ double dist(double a[], double b[]){
 double len(double a[]) {
     double length = 0;
     for(int i = 0; i < 3; i++)
-        length += a[i] * a[i];
+        length += (a[i] * a[i]);
     return sqrt(length);
 }
 

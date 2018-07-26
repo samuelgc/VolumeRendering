@@ -16,11 +16,11 @@ Volume::Volume(double bot[], double top[], int count[]) {
 Volume::~Volume() {}
 
 double Volume::sample(double pos[3], int field) {
-    double posTemp[3] = {0,0,0};
+    double loc[3] = {0,0,0};
     for(int i = 0; i < 3; i++) {
-        posTemp[i] = (pos[i] - min[i]) / size;
+        loc[i] = (pos[i] - min[i]) / size;
     }
-    return fields.at(field)->sample(posTemp);
+    return fields.at(field)->sample(loc);
 }
 
 string Volume::name(int field) {
@@ -54,7 +54,6 @@ void Volume::loadFireData(send_vol_data svd)
         fields.push_back(f);
     }
     double * temp_bounds = svd.getBounds();
-    cout <<"x" << temp_bounds[0] << "y" << temp_bounds[1] << "z" << temp_bounds[2] << "x" << temp_bounds[3] << "y" << temp_bounds[4] << "z" << temp_bounds[5] << endl;
     int * temp_res = svd.getReso();
     for(int i = 0 ; i < 3 ; i++)
     {
@@ -62,8 +61,7 @@ void Volume::loadFireData(send_vol_data svd)
         max[i] = temp_bounds[i*2+1];
         res[i] = temp_res[i];
     }
-    for(int i = 0 ; i < 3;i++)
-        cout <<" min="<<min[i] << " max=" << max[i] << endl;
+
     size = (max[0] - min[0]) / (double)res[0];
     mat = new Material();
 }

@@ -44,10 +44,10 @@ public:
      * 
      * @param double pos[] - position to calculate radiance for
      * @param double dir[] - direction of incoming ray
-     * @param Volume* obj - the volume to sample radiance from
+     * @param Volume* v - the volume to sample radiance from
      * @param double rgb[] - resulting color value
      */ 
-    void radiance(double pos[], double dir[], Volume* obj, double rgb[]);
+    void radiance(double pos[], double dir[], Volume* v, double rgb[]);
 
 };
 

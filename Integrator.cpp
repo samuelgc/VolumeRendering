@@ -55,32 +55,23 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    double density = vol->sample(pos, 0);
-    while(density <= 0.00001) {
+    while(vol->sample(pos, 0) <= 0.001) {
         eor -= vol->getSize();
         move(orig, d, eor, pos);
-        density = vol->sample(pos, 0);
         if(eor < t)
             return;
     }
-    // cout << "2" << endl;
-    move(orig, d, t, pos);
-    density = vol->sample(pos, 0);
-    int count = 0;
-    while(density <= 0.00001) {
-        count++;
-        if(count > 100)
-        {
-            cout << "stuck in the second while loop" << t << " " << vol->getSize() << "\n";
-            cout << "POS " <<  pos[0] << " " << pos[1] << " " << pos[2] << " " << "\n";
-            
-            return;
-        }
-        t += vol->getSize();
+    do {
         move(orig, d, t, pos);
-        density = vol->sample(pos, 0);
-    }
-    // cout << "3" << endl;
+        t += vol->getSize();
+        if(t > eor)
+            return;
+    } while(vol->sample(pos, 0) <= 0.001);
+    t -= vol->getSize();
+    //double rgb[3] = {1,1,1};
+    //sum(result, rgb);
+    //return;
+
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -97,28 +88,22 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(wig > eor)
             return;
         move(pos, w, wig, pos);
-        if(wig < .4) {// was .4
+        if(wig < .6) {
             double rgb[3] = {1,1,1};
-            //radiance(pos, w, vol, rgb);
+            radiance(pos, w, vol, rgb);
             sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
-            eor = dist(vol->getMin(), vol->getMax());
+            eor = 0;
             for(int i = 0; i < 3; i++)
                 w[i] = (double)rand() / RAND_MAX -.5;
             normalize(w);
-            cout << "ORI4 x= " << orig[0] << " y= " << orig[1] << " z= " << orig[2] << "\n";
-            move(pos, w, eor, orig);
-            cout << "ORI5 x= " << orig[0] << " y= " << orig[1] << " z= " << orig[2] << "\n";
-            density = vol->sample(orig, 0);
-            while(density <= 0.00001) {
-                eor -= vol->getSize();
-                move(pos, w, eor, orig);
-                density = vol->sample(orig, 0);
-                if(eor < wig) {
-                    return;
-                }
+            double temp[3] = {pos[0], pos[1], pos[2]};
+            while(vol->sample(temp, 0) > 0.001) {
+                eor += vol->getSize();
+                move(pos, w, eor, temp);
             }
+            eor -= vol->getSize();
         } else
             eor -= wig;
     }
@@ -133,7 +118,7 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
             rgb[i] = m->dense_color()[i] * m->dense_intense();
-        scale(rgb, density);
+        scale(rgb, density*5);
         return;
     }
 
@@ -175,6 +160,6 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     if(rgb[1] > 255)
         rgb[1] = 255;
 
-    scale(rgb, 0.00392156863);
-    scale(rgb, density); // Do this?
+    scale(rgb, 0.00392156863); // divide by 255
+    //scale(rgb, density*5); // Do this?
 }

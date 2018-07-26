@@ -31,8 +31,10 @@ public:
 
     /**
      * Renders the scene to the pixel buffer 
+     * 
+     * @param samples - ray samples
      */
-    void render();
+    void render(double samples);
 
     /**
      * Writes the pixel buffer out to an img file
