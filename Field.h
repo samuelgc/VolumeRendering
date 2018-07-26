@@ -14,7 +14,7 @@ public:
     Field(int res[]);
 
     ~Field();
-
+    double interpolate(double pos[3]);
     /**
      * Gives the value of this field at the specified index location
      *
