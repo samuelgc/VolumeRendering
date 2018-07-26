@@ -10,7 +10,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         cout << "USAGE:\n"
-             << "   ./vrender [scene-descriptor.txt] [output-img.ppm]\n"
+             << "   ./vrender [scene-descriptor.txt] [output-img.ppm] [samples-64]\n"
              << "Error -- Incorrect number of arguments.\n";
         return 1;
     }
@@ -19,8 +19,8 @@ int main(int argc, char *argv[]) {
 
     Renderer* vrender = new Renderer();
     vrender->loadScene(argv[1]);
-    vrender->render();
-    
+    vrender->render(128.0);//argv[3]);
+
     vrender->write(argv[2]);
 
     return 0;

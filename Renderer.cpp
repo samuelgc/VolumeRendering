@@ -16,9 +16,9 @@ void Renderer::loadScene(string inFile) {
     scene = new Scene(inFile);
 }
 
-void Renderer::render() {
-    // Assume a camera field of view of 45 degrees
-    scene->setCorner();
+void Renderer::render(double samples) {
+    double scalar = 1.0 / samples;
+    scene->setTransform();
     double i = scene->getInc();
     double point[3] = {0, 0, 0};
     double rgb[3] = {0,0,0};
@@ -29,17 +29,16 @@ void Renderer::render() {
             point[2] = 0;
             point[1] = old_y;
             point[0] = old_x;
-            //scene->transform(point);
+            scene->transform(point);
             subtract(scene->origin(), point);
             normalize(point);
             reset(rgb);
-            for(int i = 0; i < 64; i++)
+            for(int i = 0; i < samples; i++)
                 march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
-            scale(rgb, 0.015625);
+            scale(rgb, scalar);
             addPixel(rgb);
             old_x += i;
         }
-        cout << "Finished pixels x: " << x << "\n";
         old_y -= i;
     }
 }

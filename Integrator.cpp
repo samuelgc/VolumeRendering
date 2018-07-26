@@ -75,7 +75,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         move(pos, w, wig, pos);
         if(wig < .6) {
             double rgb[3] = {1,1,1};
-            //radiance(pos, w, vol, rgb);
+            radiance(pos, w, vol, rgb);
             sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
@@ -102,7 +102,7 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
             rgb[i] = m->dense_color()[i] * m->dense_intense();
-        scale(rgb, density);
+        scale(rgb, density*5);
         return;
     }
 
@@ -144,6 +144,6 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     if(rgb[1] > 255)
         rgb[1] = 255;
 
-    scale(rgb, 0.00392156863);
-    scale(rgb, density); // Do this?
+    scale(rgb, 0.00392156863); // divide by 255
+    //scale(rgb, density*5); // Do this?
 }

@@ -66,7 +66,7 @@ double* Scene::origin() {
 void Scene::setCorner() {
     // Set size of screen in world units
     double len = dist(cam->getOrigin(), cam->getOrient());
-    len *= tan(.48);
+    len *= tan(.4);// Assume a camera field of view of 45 degrees roughly...
     corner[0] = -1 * len;
     corner[1] = len * (cam->getRes()[1] / cam->getRes()[0]);
     inc = (len * 2.0) / cam->getRes()[0];
@@ -82,13 +82,16 @@ double Scene::getInc() {
 
 void Scene::setTransform() {
     transfo = new Matrix();
-    transfo->set(3, 3, 1);
+    for(int i = 0; i < 4; i++)
+        transfo->set(i, i, 1);
+    /*
     Matrix* mult = new Matrix();
-    mult->set(3, 3, 1);
+    for(int i = 0; i < 4; i++)
+        mult->set(i, i, 1);
     double point[3] = {0,0,0};
     for(int i = 0; i < 3; i++)
         point[i] = cam->getOrigin()[i] - cam->getOrient()[i];
-
+    
     // Rotate around Y --- THIS MIGHT BE WRONG BECAUSE OF DIRECTION OF Z
     double theta = -1.0 * (atan2(point[2], point[0]) * (180.0 / PI) + 90.0);
     double theta_x = -1.0 * theta;
@@ -126,6 +129,10 @@ void Scene::setTransform() {
     mult->set(1, 3, cam->getOrient()[1]);
     mult->set(2, 3, cam->getOrient()[2]);
     transfo = mat_mult(mult, transfo);
+    */
+    transfo->set(0, 3, cam->getOrient()[0]);
+    transfo->set(1, 3, cam->getOrient()[1]);
+    transfo->set(2, 3, cam->getOrient()[2]);
 
     setCorner();
 }
