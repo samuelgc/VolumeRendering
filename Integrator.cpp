@@ -145,5 +145,7 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
         rgb[1] = 255;
 
     scale(rgb, 0.00392156863); // divide by 255
+    if(rgb[0] < 0 || rgb[0] > 255 || rgb[1] < 0 || rgb[1] > 255 || rgb[2] < 0 || rgb[2] > 255)
+        cout << "Out of Range\n";
     //scale(rgb, density*5); // Do this?
 }

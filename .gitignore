@@ -5,3 +5,5 @@ cmake-build-debug/*
 cmake-build-debug
 .idea
 .idea/*
+render
+*.ppm
