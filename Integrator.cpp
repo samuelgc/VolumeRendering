@@ -58,7 +58,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         t += vol->getSize();
     } while(vol->sample(pos, 0) <= 0.001);
     t -= vol->getSize();
-
+    
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -67,7 +67,6 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         wig = (double)rand() / RAND_MAX;
         if(wig > eor)
             return;
-        move(pos, w, wig, orig);
         move(pos, w, wig, pos);
         if(wig < .4) {// was .4
             double rgb[3] = {1,1,1};
@@ -79,9 +78,10 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             for(int i = 0; i < 3; i++)
                 w[i] = (double)rand() / RAND_MAX -.5;
             normalize(w);
-            while(vol->sample(orig, 0) > 0.001) {
+            double temp[3] = {pos[0], pos[1], pos[2]};
+            while(vol->sample(temp, 0) > 0.001) {
                 eor += vol->getSize();
-                move(pos, w, eor, orig);
+                move(pos, w, eor, temp);
             }
             eor -= vol->getSize();
         } else
