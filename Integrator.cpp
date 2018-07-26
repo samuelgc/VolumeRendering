@@ -56,9 +56,14 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     do {
         move(orig, d, t, pos);
         t += vol->getSize();
+        if(t > eor)
+            return;
     } while(vol->sample(pos, 0) <= 0.001);
     t -= vol->getSize();
-    
+    //double rgb[3] = {1,1,1};
+    //sum(result, rgb);
+    //return;
+
     // Perform path trace
     double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
@@ -68,7 +73,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(wig > eor)
             return;
         move(pos, w, wig, pos);
-        if(wig < .4) {// was .4
+        if(wig < .6) {
             double rgb[3] = {1,1,1};
             //radiance(pos, w, vol, rgb);
             sum(result, rgb);
