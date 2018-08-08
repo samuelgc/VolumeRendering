@@ -43,7 +43,8 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     if(t < 0) {
         return;
     }
-
+    if(t == 8.25)
+     cout << d[0] << "," << d[1] << "," << d[2] << " end of array " << eor << endl;
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
@@ -73,7 +74,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(wig > eor)
             return;
         move(pos, w, wig, pos);
-        if(wig < .6) {
+        if(wig < 1) { // was .6
             double rgb[3] = {1,1,1};
             radiance(pos, w, vol, rgb);
             sum(result, rgb);
@@ -90,7 +91,9 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             }
             eor -= vol->getSize();
         } else
+        {
             eor -= wig;
+        }
     }
 }
 
@@ -147,5 +150,5 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     scale(rgb, 0.00392156863); // divide by 255
     if(rgb[0] < 0 || rgb[0] > 255 || rgb[1] < 0 || rgb[1] > 255 || rgb[2] < 0 || rgb[2] > 255)
         cout << "Out of Range\n";
-    //scale(rgb, density*5); // Do this?
+    // scale(rgb, density*5); // Do this?
 }

@@ -16,12 +16,12 @@ double Field::interpolate(double pos[3])
     double val_0_0_0 = values[int(pos[0])][int(pos[1])][int(pos[2])];
     double val_1_0_0 = values[int(pos[0] + 1)][int(pos[1])][int(pos[2])];
     double val_0_1_0 = values[int(pos[0])][int(pos[1] + 1)][int(pos[2])];
-    double val_1_1_0 = values[int(pos[0])][int(pos[1])][int(pos[2])];
+    double val_1_1_0 = values[int(pos[0] + 1)][int(pos[1] + 1)][int(pos[2])];
     //top 4 corners
     double val_0_0_1 = values[int(pos[0])][int(pos[1])][int(pos[2] + 1)];
     double val_1_0_1 = values[int(pos[0] + 1)][int(pos[1])][int(pos[2] + 1)];
     double val_0_1_1 = values[int(pos[0])][int(pos[1] + 1)][int(pos[2] + 1)];
-    double val_1_1_1 = values[int(pos[0])][int(pos[1])][int(pos[2] + 1)];
+    double val_1_1_1 = values[int(pos[0] + 1)][int(pos[1] + 1)][int(pos[2] + 1)];
     //distance for inter x-dir
     double dis0_x = pos[0] - int(pos[0]);
     double disx_1 = int(pos[0] + 1) - pos[0];
@@ -31,6 +31,7 @@ double Field::interpolate(double pos[3])
     //distance for inter z-dir
     double dis0_z = pos[2] - int(pos[2]);
     double disz_1 = int(pos[2] + 1) - pos[2];
+    // cout << dis0_x << " " << disx_1 << " " << dis0_y << " " << disy_1 << " " << dis0_z << " " << disz_1 << " " <<endl;
     //Time to interpolate x-dir
         // bottom x's
     double x0 = val_0_0_0 * disx_1 + val_1_0_0 * dis0_x;
@@ -65,8 +66,8 @@ double Field::sample(double pos[3]) {
         return values.at(x).at(y).at(z);
     }
     
-    return interpolate(pos);
-    // return values.at(x).at(y).at(z);
+    // return interpolate(pos);
+    return values.at(x).at(y).at(z);
 }
 void Field::setValues(vector<vector<vector<double>>> v)
 {
