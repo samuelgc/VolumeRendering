@@ -43,11 +43,6 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     if(t < 0) {
         return;
     }
-    bool debug = false;
-    if(t == 4 -1.64999974){
-        cout << d[0] << "," << d[1] << "," << d[2] << " end of array " << eor << endl;
-        debug = true;
-    }
 
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
@@ -61,83 +56,133 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(eor < t)
             return;
     }
-    do {
-        
-        move(orig, d, t, pos);
-        t += vol->getSize();
-        // if(debug)
-        //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
-        if(t > eor)
+    move(orig,d,t,pos);
+    while(vol->sample(pos, 0) <= 0.0001)
+    {
+        if(t > eor){
             return;
-    } while(vol->sample(pos, 0) <= 0.0001);
-    t -= vol->getSize();
-    if(debug)
-        cout << t << " " << eor << endl;
+        }
+        t+= vol->getSize();
+        move(orig,d,t,pos);
+    }
+    // do {
+        
+    //     move(orig, d, t, pos);
+    //     t += vol->getSize();
+    //     // if(debug)
+    //     //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
+    //     if(t > eor)
+    //         return;
+    // } while(vol->sample(pos, 0) <= 0.0001);
+    // t -= vol->getSize();
+    // if(debug)
+        // cout << t << " " << eor << endl;
     // double rgb[3] = {0,0,0};
     // sum(result, rgb);
     //return;
 
+    double absor = 1.0;
+    double scat = 1.0;
+    double exti = absor + scat;
+    double nc = 2;
+    double maj = exti + nc; 
+    double ray_length = eor - t;
     // Perform path trace
-    double wig = 0;
+    // double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
-    eor -= t;
-    while(true) {
-        wig = (double)rand() / RAND_MAX;
-        if(wig > 1)
-            cout << "lol" << endl;
-        // if(wig > eor)
-        // {
-        //     return;
-        // }
-        if(1 > eor)
+    // eor -= t;
+    
+    // this might not be needed
+    move(orig, d, t, pos);
+    while(true)
+    {
+        double r1 = (double)rand() / RAND_MAX;
+        double r2 = (double)rand() / RAND_MAX;
+        double dis = abs(log(1-r1)/maj);
+        // cout << dis << endl;
+        if(dis > ray_length) // the next move takes it out of the volumes(fire) boundary has been hit
+        {
+            // double rgb[3] = {0,255,255}; // for debugging
+            // sum(result,rgb);
             return;
-        // cout << w[0] << " " << w[1] << " " << w[2] << " " << endl;
-        move(pos, w, 1 , pos); // wig
-        if(wig < .6) { // was .6
-            double rgb[3] = {1,1,1};
+        }
+        //move particle to next position
+        move(pos,w,dis,pos);
+        if(true)//r2 < absor/maj)
+        {
+            // cout << vol->sample(pos,0) << endl;
+            double rgb[3] = {1,1,1};//{50/255.0,255/255.0,50/255.0};
             radiance(pos, w, vol, rgb);
-            if(debug)
-                cout << rgb[0] << " " << rgb[1] << " " << rgb[2] << endl; 
             sum(result, rgb);
             return;
-        } else if (wig < 1 - .2) {
-            eor = 0;
-            for(int i = 0; i < 3; i++)
-                w[i] = (double)rand() / RAND_MAX -.5;
-            normalize(w);
-            double temp[3] = {pos[0], pos[1], pos[2]};
-            while(vol->sample(temp, 0) > 0.001) {
-                eor += vol->getSize();
-                move(pos, w, eor, temp);
-            }
-            eor -= vol->getSize();
-        } else
-        {
-            eor -= wig;
         }
+        else if(r2 < 1 - nc/maj)
+        {
+            double rgb[3] = {0,0,0};
+            // double rgb[3] = {0,255.0/255,255.0/255};//{50,250,50};
+            sum(result, rgb);
+            return;
+        }
+        else
+        {
+            double rgb[3] = {0,0,0};
+            // double rgb[3] = {255.0/255,255.0/255,0};//{50,250,50};
+            sum(result, rgb);
+            return;
+        }
+        
+        // return;
+
     }
+    // while(true) {
+    //     wig = (double)rand() / RAND_MAX;
+    //     if(wig > eor)
+    //     {
+            
+    //         return;
+    //     }
+    //     move(pos, w, wig , pos); // wig
+    //     if(true){//wig < .6) { // was .6
+    //         double rgb[3] = {1,1,1};
+    //         radiance(pos, w, vol, rgb);
+    //         if(debug)
+    //             cout << rgb[0] << " " << rgb[1] << " " << rgb[2] << endl; 
+    //         sum(result, rgb);
+    //         return;
+    //     } else if (wig < 1 - .2) {
+    //         eor = 0;
+    //         for(int i = 0; i < 3; i++)
+    //             w[i] = (double)rand() / RAND_MAX -.5;
+    //         normalize(w);
+    //         double temp[3] = {pos[0], pos[1], pos[2]};
+    //         while(vol->sample(temp, 0) > 0.001) {
+    //             eor += vol->getSize();
+    //             move(pos, w, eor, temp);
+    //         }
+    //         eor -= vol->getSize();
+    //     } else
+    //     {
+    //         eor -= wig;
+    //     }
+    // }
 }
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     Material* m = v->getMat();
-
+    // while(v->sample(pos,5) == 0)
+    // {
+    //     move(pos,dir,.05,pos);
+    // }
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
     double emit = m->temp_intense() * v->sample(pos, 5); // Sample heat?
     
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
-            rgb[i] = m->dense_color()[i] * m->dense_intense();
-        scale(rgb, density*5);
-        // rgb[0] = 10;
-        // rgb[1] = 10;
-        // rgb[2] = 10;
-        // cout << rgb[0] << endl;
+            rgb[i] = 0;
+            // rgb[i] = m->dense_color()[i] * m->dense_intense();
+        // scale(rgb, density*5);
         return;
     }
-    // rgb[0] = 50;
-    // rgb[1] = 50;
-    // rgb[2] = 50;
-    // return;
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 

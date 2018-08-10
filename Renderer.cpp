@@ -31,18 +31,12 @@ void Renderer::render(double samples) {
             point[1] = old_y;
             point[0] = old_x;
             scene->transform(point);
-            // cout << point[0] << point[1] << point[2] << endl;
             subtract(scene->origin(), point);
-            // cout << point[0] << point[1] << point[2] << endl;
             normalize(point);
-            // double val = scene->getVolumes()[0]->sample(point,4);
             reset(rgb);
             for(int i = 0; i < samples; i++)
                 march->integrate(scene->origin(), point, scene->getVolumes(), rgb);
             scale(rgb, scalar);
-            // rgb[0] = val;
-            // rgb[1] = val;
-            // rgb[2] = val;
             addPixel(rgb);
             old_x += i;
         }
