@@ -43,26 +43,38 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     if(t < 0) {
         return;
     }
-    if(t == 8.25)
-     cout << d[0] << "," << d[1] << "," << d[2] << " end of array " << eor << endl;
+    bool debug = false;
+    if(t == 4 -1.64999974){
+        cout << d[0] << "," << d[1] << "," << d[2] << " end of array " << eor << endl;
+        debug = true;
+    }
+
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    while(vol->sample(pos, 0) <= 0.001) {
+    while(vol->sample(pos, 0) <= 0.0001) 
+    {   
+        // if(debug)
+        //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
         eor -= vol->getSize();
         move(orig, d, eor, pos);
         if(eor < t)
             return;
     }
     do {
+        
         move(orig, d, t, pos);
         t += vol->getSize();
+        // if(debug)
+        //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
         if(t > eor)
             return;
-    } while(vol->sample(pos, 0) <= 0.001);
+    } while(vol->sample(pos, 0) <= 0.0001);
     t -= vol->getSize();
-    //double rgb[3] = {1,1,1};
-    //sum(result, rgb);
+    if(debug)
+        cout << t << " " << eor << endl;
+    // double rgb[3] = {0,0,0};
+    // sum(result, rgb);
     //return;
 
     // Perform path trace
@@ -71,12 +83,21 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     eor -= t;
     while(true) {
         wig = (double)rand() / RAND_MAX;
-        if(wig > eor)
+        if(wig > 1)
+            cout << "lol" << endl;
+        // if(wig > eor)
+        // {
+        //     return;
+        // }
+        if(1 > eor)
             return;
-        move(pos, w, wig, pos);
-        if(wig < 1) { // was .6
+        // cout << w[0] << " " << w[1] << " " << w[2] << " " << endl;
+        move(pos, w, 1 , pos); // wig
+        if(wig < .6) { // was .6
             double rgb[3] = {1,1,1};
             radiance(pos, w, vol, rgb);
+            if(debug)
+                cout << rgb[0] << " " << rgb[1] << " " << rgb[2] << endl; 
             sum(result, rgb);
             return;
         } else if (wig < 1 - .2) {
@@ -102,13 +123,21 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
 
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
     double emit = m->temp_intense() * v->sample(pos, 5); // Sample heat?
+    
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
             rgb[i] = m->dense_color()[i] * m->dense_intense();
         scale(rgb, density*5);
+        // rgb[0] = 10;
+        // rgb[1] = 10;
+        // rgb[2] = 10;
+        // cout << rgb[0] << endl;
         return;
     }
-
+    // rgb[0] = 50;
+    // rgb[1] = 50;
+    // rgb[2] = 50;
+    // return;
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 

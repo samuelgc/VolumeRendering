@@ -1,2 +1,2 @@
-CAMERA 0 -.75 10 0 -.75 0 256 256
+CAMERA 0 0 4 0 0 0 256 256
 ./scenes/help.json

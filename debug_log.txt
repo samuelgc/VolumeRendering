@@ -1,0 +1,9 @@
+##My debug lof of what I know what works. AKA I have done math and it checks out.
+
+Intersect 
+
+Test Param
+(scene.txt)
+CAMERA 0 -.75 10 0 -.75 0 256 256
+./scenes/help.json
+t == 8.25 dir = 0 ,0 ,-1 and EOR = 11.75

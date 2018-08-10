@@ -15,10 +15,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    srand(time(NULL));
-
+    // srand(time(NULL));
+    srand(1);
     Renderer* vrender = new Renderer();
+    cout << "loading Scene\n";
     vrender->loadScene(argv[1]);
+    cout << "Starting Render\n";
     vrender->render(1);//128.0);//argv[3]);
 
     vrender->write(argv[2]);
