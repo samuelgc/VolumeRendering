@@ -47,7 +47,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    while(vol->sample(pos, 0) <= 0.0001) 
+    while(vol->sample(pos, 5) <= 0.0001) 
     {   
         // if(debug)
         //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
@@ -57,7 +57,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             return;
     }
     move(orig,d,t,pos);
-    while(vol->sample(pos, 0) <= 0.0001)
+    while(vol->sample(pos, 5) <= 0.0001)
     {
         if(t > eor){
             return;

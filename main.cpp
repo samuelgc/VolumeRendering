@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     cout << "loading Scene\n";
     vrender->loadScene(argv[1]);
     cout << "Starting Render\n";
-    vrender->render(1);//128.0);//argv[3]);
+    vrender->render(64);//128.0);//argv[3]);
 
     vrender->write(argv[2]);
 
