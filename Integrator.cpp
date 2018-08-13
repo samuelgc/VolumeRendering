@@ -47,17 +47,15 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    while(vol->sample(pos, 5) <= 0.0001) 
+    while(vol->sample(pos, 0) <= 0.0001) 
     {   
-        // if(debug)
-        //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
         eor -= vol->getSize();
         move(orig, d, eor, pos);
         if(eor < t)
             return;
     }
     move(orig,d,t,pos);
-    while(vol->sample(pos, 5) <= 0.0001)
+    while(vol->sample(pos, 0) <= 0.0001)
     {
         if(t > eor){
             return;
@@ -65,33 +63,17 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         t+= vol->getSize();
         move(orig,d,t,pos);
     }
-    // do {
-        
-    //     move(orig, d, t, pos);
-    //     t += vol->getSize();
-    //     // if(debug)
-    //     //     cout << pos[0] << "," << pos[1] << "," << pos[2] << " end of array " << eor << endl;
-    //     if(t > eor)
-    //         return;
-    // } while(vol->sample(pos, 0) <= 0.0001);
     // t -= vol->getSize();
-    // if(debug)
-        // cout << t << " " << eor << endl;
-    // double rgb[3] = {0,0,0};
-    // sum(result, rgb);
-    //return;
-
     double absor = 1.0;
-    double scat = 1.0;
+    double scat = 3.0;
     double exti = absor + scat;
-    double nc = 2;
+    double nc = 5;
     double maj = exti + nc; 
     double ray_length = eor - t;
     // Perform path trace
     // double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
     // eor -= t;
-    
     // this might not be needed
     move(orig, d, t, pos);
     while(true)
@@ -108,7 +90,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         }
         //move particle to next position
         move(pos,w,dis,pos);
-        if(true)//r2 < absor/maj)
+        if(r2 < absor/maj)
         {
             // cout << vol->sample(pos,0) << endl;
             double rgb[3] = {1,1,1};//{50/255.0,255/255.0,50/255.0};
@@ -116,23 +98,31 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             sum(result, rgb);
             return;
         }
-        else if(r2 < 1 - nc/maj)
-        {
-            double rgb[3] = {0,0,0};
-            // double rgb[3] = {0,255.0/255,255.0/255};//{50,250,50};
-            sum(result, rgb);
-            return;
-        }
+        // else if(r2 < 1 - nc/maj)
+        // {
+        //     // double rgb[3] = {0,0,0};
+        //     // double rgb[3] = {50/255.0,255.0/255.0,50/255.0};//{50,250,50};
+        //     // double rgb[3] = {0,0,0};
+        //     for(int i = 0 ; i < 3 ; i++)
+        //         w[i] = (double)rand() / RAND_MAX;
+        //     normalize(w);
+        //     double temp[3] = {pos[0], pos[1], pos[2]};
+        //     ray_length = 0;
+        //     int count = 0;
+        //     while(vol->sample(temp,0) < .0001 )
+        //     {
+        //         if(count > 100)
+        //             cout << "im stuck" << endl;
+        //         ray_length += vol->getSize();
+        //         move(pos,w,ray_length,temp);
+        //     }
+        //     // sum(result, rgb);
+        //     // return;
+        // }
         else
         {
-            double rgb[3] = {0,0,0};
-            // double rgb[3] = {255.0/255,255.0/255,0};//{50,250,50};
-            sum(result, rgb);
-            return;
+            ray_length -= dis;
         }
-        
-        // return;
-
     }
     // while(true) {
     //     wig = (double)rand() / RAND_MAX;
@@ -178,9 +168,9 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
-            rgb[i] = 0;
-            // rgb[i] = m->dense_color()[i] * m->dense_intense();
-        // scale(rgb, density*5);
+            // rgb[i] = 0;
+            rgb[i] = m->dense_color()[i] * m->dense_intense();
+        scale(rgb, density*5);
         return;
     }
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
