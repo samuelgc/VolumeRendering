@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
     Renderer* vrender = new Renderer();
     vrender->loadScene(argv[1]);
-    vrender->render(128.0);//argv[3]);
+    vrender->render(64.0);//argv[3]);
 
     vrender->write(argv[2]);
 
