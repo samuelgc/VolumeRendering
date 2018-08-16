@@ -1,2 +1,2 @@
-CAMERA 0 2 10 0 2 0 256 256
-./scenes/fire.json
+CAMERA 0 0 4 0 0 0 256 256
+./scenes/help.json

@@ -25,6 +25,7 @@ void Renderer::render(double samples) {
     double old_y = scene->getCorner()[1];
     for(int x = 0; x < scene->width(); x++) {
         double old_x = scene->getCorner()[0];
+        // cout << "point " << old_x << "," << old_y << "," << 0 << endl;
         for(int y = 0; y < scene->height(); y++) {
             point[2] = 0;
             point[1] = old_y;

@@ -178,7 +178,14 @@ void loadDimensions(string info)
     string y = num.substr(indexC1 + 1,indexC2 - indexC1 -1);
     string z = num.substr(indexC2 + 1,num.length() - indexC2 - 1);
     //convert to Integars
-    xDim = stoi(x);
-    yDim = stoi(y);
-    zDim = stoi(z);
+    try{
+        xDim = stoi(x);
+        yDim = stoi(y);
+        zDim = stoi(z);
+    }
+    catch(exception& e)
+    {
+        cout << x << " " << y << " " << z <<  endl;
+        cout << e.what() << endl;
+    }
 }

@@ -47,65 +47,132 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
     // Move intersections to edges of the volume
     double pos[3] = {0, 0, 0};
     move(orig, d, eor, pos);
-    while(vol->sample(pos, 0) <= 0.001) {
+    while(vol->sample(pos, 0) <= 0.0001) 
+    {   
         eor -= vol->getSize();
         move(orig, d, eor, pos);
         if(eor < t)
             return;
     }
-    do {
-        move(orig, d, t, pos);
-        t += vol->getSize();
-        if(t > eor)
+    move(orig,d,t,pos);
+    while(vol->sample(pos, 0) <= 0.0001)
+    {
+        if(t > eor){
             return;
-    } while(vol->sample(pos, 0) <= 0.001);
-    t -= vol->getSize();
-    //double rgb[3] = {1,1,1};
-    //sum(result, rgb);
-    //return;
-
+        }
+        t+= vol->getSize();
+        move(orig,d,t,pos);
+    }
+    // t -= vol->getSize();
+    double absor = 1.0;
+    double scat = 3.0;
+    double exti = absor + scat;
+    double nc = 5;
+    double maj = exti + nc; 
+    double ray_length = eor - t;
     // Perform path trace
-    double wig = 0;
+    // double wig = 0;
     double w[3] = {d[0], d[1], d[2]};
-    eor -= t;
-    while(true) {
-        wig = (double)rand() / RAND_MAX;
-        if(wig > eor)
+    // eor -= t;
+    // this might not be needed
+    move(orig, d, t, pos);
+    while(true)
+    {
+        double r1 = (double)rand() / RAND_MAX;
+        double r2 = (double)rand() / RAND_MAX;
+        double dis = abs(log(1-r1)/maj);
+        // cout << dis << endl;
+        if(dis > ray_length) // the next move takes it out of the volumes(fire) boundary has been hit
+        {
+            // double rgb[3] = {0,255,255}; // for debugging
+            // sum(result,rgb);
             return;
-        move(pos, w, wig, pos);
-        if(wig < .6) {
-            double rgb[3] = {1,1,1};
+        }
+        //move particle to next position
+        move(pos,w,dis,pos);
+        if(r2 < absor/maj)
+        {
+            // cout << vol->sample(pos,0) << endl;
+            double rgb[3] = {1,1,1};//{50/255.0,255/255.0,50/255.0};
             radiance(pos, w, vol, rgb);
             sum(result, rgb);
             return;
-        } else if (wig < 1 - .2) {
-            eor = 0;
-            for(int i = 0; i < 3; i++)
-                w[i] = (double)rand() / RAND_MAX -.5;
-            normalize(w);
-            double temp[3] = {pos[0], pos[1], pos[2]};
-            while(vol->sample(temp, 0) > 0.001) {
-                eor += vol->getSize();
-                move(pos, w, eor, temp);
-            }
-            eor -= vol->getSize();
-        } else
-            eor -= wig;
+        }
+        // else if(r2 < 1 - nc/maj)
+        // {
+        //     // double rgb[3] = {0,0,0};
+        //     // double rgb[3] = {50/255.0,255.0/255.0,50/255.0};//{50,250,50};
+        //     // double rgb[3] = {0,0,0};
+        //     for(int i = 0 ; i < 3 ; i++)
+        //         w[i] = (double)rand() / RAND_MAX;
+        //     normalize(w);
+        //     double temp[3] = {pos[0], pos[1], pos[2]};
+        //     ray_length = 0;
+        //     int count = 0;
+        //     while(vol->sample(temp,0) < .0001 )
+        //     {
+        //         if(count > 100)
+        //             cout << "im stuck" << endl;
+        //         ray_length += vol->getSize();
+        //         move(pos,w,ray_length,temp);
+        //     }
+        //     // sum(result, rgb);
+        //     // return;
+        // }
+        else
+        {
+            ray_length -= dis;
+        }
     }
+    // while(true) {
+    //     wig = (double)rand() / RAND_MAX;
+    //     if(wig > eor)
+    //     {
+            
+    //         return;
+    //     }
+    //     move(pos, w, wig , pos); // wig
+    //     if(true){//wig < .6) { // was .6
+    //         double rgb[3] = {1,1,1};
+    //         radiance(pos, w, vol, rgb);
+    //         if(debug)
+    //             cout << rgb[0] << " " << rgb[1] << " " << rgb[2] << endl; 
+    //         sum(result, rgb);
+    //         return;
+    //     } else if (wig < 1 - .2) {
+    //         eor = 0;
+    //         for(int i = 0; i < 3; i++)
+    //             w[i] = (double)rand() / RAND_MAX -.5;
+    //         normalize(w);
+    //         double temp[3] = {pos[0], pos[1], pos[2]};
+    //         while(vol->sample(temp, 0) > 0.001) {
+    //             eor += vol->getSize();
+    //             move(pos, w, eor, temp);
+    //         }
+    //         eor -= vol->getSize();
+    //     } else
+    //     {
+    //         eor -= wig;
+    //     }
+    // }
 }
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     Material* m = v->getMat();
-
+    // while(v->sample(pos,5) == 0)
+    // {
+    //     move(pos,dir,.05,pos);
+    // }
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
     double emit = m->temp_intense() * v->sample(pos, 5); // Sample heat?
+    
     if(emit == 0) {
         for(int i = 0; i < 3; i++)
+            // rgb[i] = 0;
             rgb[i] = m->dense_color()[i] * m->dense_intense();
         scale(rgb, density*5);
         return;
     }
-
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 
@@ -145,5 +212,7 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
         rgb[1] = 255;
 
     scale(rgb, 0.00392156863); // divide by 255
-    //scale(rgb, density*5); // Do this?
+    if(rgb[0] < 0 || rgb[0] > 255 || rgb[1] < 0 || rgb[1] > 255 || rgb[2] < 0 || rgb[2] > 255)
+        cout << "Out of Range\n";
+    // scale(rgb, density*5); // Do this?
 }
