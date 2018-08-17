@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
+    if (argc < 3) {
         cout << "USAGE:\n"
              << "   ./vrender [scene-descriptor.txt] [output-img.ppm] [samples-64]\n"
              << "Error -- Incorrect number of arguments.\n";
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     cout << "loading Scene\n";
     vrender->loadScene(argv[1]);
     cout << "Starting Render\n";
-    vrender->render(64);//128.0);//argv[3]);
+    vrender->render(atoi(argv[3]));
 
     vrender->write(argv[2]);
 

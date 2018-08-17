@@ -66,8 +66,8 @@ double Field::sample(double pos[3]) {
         return values.at(x).at(y).at(z);
     }
     
-    // return interpolate(pos);
-    return values.at(x).at(y).at(z);
+    return interpolate(pos);
+    // return values.at(x).at(y).at(z);
 }
 void Field::setValues(vector<vector<vector<double>>> v)
 {

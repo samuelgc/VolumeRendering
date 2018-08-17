@@ -159,10 +159,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     Material* m = v->getMat();
-    // while(v->sample(pos,5) == 0)
-    // {
-    //     move(pos,dir,.05,pos);
-    // }
+   
     double density = m->dense_scale() * v->sample(pos, 0); // Sample density?
     double emit = m->temp_intense() * v->sample(pos, 5); // Sample heat?
     
@@ -176,8 +173,12 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 
+    
     // Perform blackbody mapping from temperature to RGB
-    temp /= 100;
+    
+
+
+    /*temp /= 100;
     if(temp <= 66) {
         rgb[0] = 255;
 
@@ -212,7 +213,9 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
         rgb[1] = 255;
 
     scale(rgb, 0.00392156863); // divide by 255
+    
     if(rgb[0] < 0 || rgb[0] > 255 || rgb[1] < 0 || rgb[1] > 255 || rgb[2] < 0 || rgb[2] > 255)
         cout << "Out of Range\n";
     // scale(rgb, density*5); // Do this?
+    */
 }
