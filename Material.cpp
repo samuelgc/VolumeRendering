@@ -9,7 +9,7 @@ Material::Material() {
 
     f_int = 2;
     t_int = .2;
-    kelvin = 500;
+    kelvin = 750;
     a = 0.15;
     b = 0;     
 }

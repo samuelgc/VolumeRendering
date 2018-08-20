@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "Blackbody.h"
 #include "Math.h"
 
 Integrator::Integrator() {}
@@ -36,6 +37,67 @@ double Integrator::intersect(double orig[], double d[], Volume* box, double *t_f
     return t_near;
 }
 
+/**
+ * Samuel version...
+ *
+void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
+    Volume* vol = objs.at(0);
+    double eor = 0;
+    double t = intersect(orig, d, vol, &eor);
+    if(t < 0) {
+        return;
+    }
+
+    // Move intersections to edges of the volume
+    double pos[3] = {0, 0, 0};
+    move(orig, d, eor, pos);
+    while(vol->sample(pos, 0) <= 0.001) {
+        eor -= vol->getSize();
+        move(orig, d, eor, pos);
+        if(eor < t)
+            return;
+    }
+    do {
+        move(orig, d, t, pos);
+        t += vol->getSize();
+        if(t > eor)
+            return;
+    } while(vol->sample(pos, 0) <= 0.001);
+    t -= vol->getSize();
+
+    // Perform path trace
+    double wig = 0;
+    double w[3] = {d[0], d[1], d[2]};
+    eor -= t;
+    while(true) {
+        wig = (double)rand() / RAND_MAX;
+        if(wig > eor)
+            return;
+        move(pos, w, wig, pos);
+        if(wig < .333) {
+            double rgb[3] = {1,1,1};
+            radiance(pos, w, vol, rgb);
+            sum(result, rgb);
+            return;
+        } else if (wig < 1 - .333) {
+            eor = 0;
+            for(int i = 0; i < 3; i++)
+                w[i] = (double)rand() / RAND_MAX -.5;
+            normalize(w);
+            double temp[3] = {pos[0], pos[1], pos[2]};
+            while(vol->sample(temp, 0) > 0.001) {
+                eor += vol->getSize();
+                move(pos, w, eor, temp);
+            }
+            eor -= vol->getSize();
+        } else
+            eor -= wig;
+    }
+}
+
+/**
+ * Brian version...
+ */
 void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
     Volume* vol = objs.at(0);
     double eor = 0;
@@ -124,37 +186,6 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
             ray_length -= dis;
         }
     }
-    // while(true) {
-    //     wig = (double)rand() / RAND_MAX;
-    //     if(wig > eor)
-    //     {
-            
-    //         return;
-    //     }
-    //     move(pos, w, wig , pos); // wig
-    //     if(true){//wig < .6) { // was .6
-    //         double rgb[3] = {1,1,1};
-    //         radiance(pos, w, vol, rgb);
-    //         if(debug)
-    //             cout << rgb[0] << " " << rgb[1] << " " << rgb[2] << endl; 
-    //         sum(result, rgb);
-    //         return;
-    //     } else if (wig < 1 - .2) {
-    //         eor = 0;
-    //         for(int i = 0; i < 3; i++)
-    //             w[i] = (double)rand() / RAND_MAX -.5;
-    //         normalize(w);
-    //         double temp[3] = {pos[0], pos[1], pos[2]};
-    //         while(vol->sample(temp, 0) > 0.001) {
-    //             eor += vol->getSize();
-    //             move(pos, w, eor, temp);
-    //         }
-    //         eor -= vol->getSize();
-    //     } else
-    //     {
-    //         eor -= wig;
-    //     }
-    // }
 }
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
@@ -167,55 +198,40 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
         for(int i = 0; i < 3; i++)
             // rgb[i] = 0;
             rgb[i] = m->dense_color()[i] * m->dense_intense();
-        scale(rgb, density*5);
+        scale(rgb, density);
         return;
     }
     double temp = m->fire_intense() * v->sample(pos, 4); // Sample temperature?
     temp *= m->kelvin_temp();
 
     
-    // Perform blackbody mapping from temperature to RGB
-    
+    // Perform blackbody mapping from temperature to XYZ
+    double chr0[3] = {0,0,0};
+    double chr1[3] = {0,0,0};
+    double chr2[3] = {0,0,0};
+    double adapt_val = m->adaption();
+    double burn_val = m->burn();
+    double val_x = blackbody(temp, adapt_val, burn_val, chr0);
+    double val_y = blackbody(temp, adapt_val, burn_val, chr1);
+    double val_z = blackbody(temp, adapt_val, burn_val, chr2);
 
+    double xyz[3] = {0,0,0};
+    xyz[0] = chr0[0] * val_x;
+    xyz[1] = chr1[1] * val_y;
+    xyz[2] = chr2[2] * val_z;
 
-    /*temp /= 100;
-    if(temp <= 66) {
-        rgb[0] = 255;
+    //cout << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << " => ";
 
-        rgb[1] = temp;
-        rgb[1] = 99.4708025861 * log(rgb[1]) - 161.1195681661;
-
-        if(temp <= 19)
-            rgb[2] = 0;
-        else {
-            rgb[2] = temp - 10;
-            rgb[2] = 138.5177312231 * log(rgb[2]) - 305.0447927307;
-            if(rgb[2] < 0)
-                rgb[2] = 0;
-            if(rgb[2] > 255)
-                rgb[2] = 255;
-        }
-    } else {
-        rgb[0] = temp - 60;
-        rgb[0] = 329.698727446 * pow(rgb[0], -0.1332047592);
-        if(rgb[0] < 0)
-            rgb[0] = 0;
-        if(rgb[0] > 255)
-            rgb[0] = 255;
-        
-        rgb[1] = temp - 60;
-        rgb[1] = 288.1221695283 * pow(rgb[1], -0.0755148492);
-        rgb[2] = 255;
+    // Convert XYZ to sRGB colorspace
+    rgb[0] = 3.2404542 * xyz[0] - 1.5371385 * xyz[1] - 0.4985314 * xyz[2];
+    rgb[1] = -0.969266 * xyz[0] + 1.8760108 * xyz[1] + 0.041556 * xyz[2];
+    rgb[2] = 0.0556434 * xyz[0] - 0.2040259 * xyz[1] + 1.0572252 * xyz[2];
+    for(int i = 0; i < 3; i++) {
+        if(rgb[i] <= 0.0031308)
+            rgb[i] *= 12.92;
+        else
+            rgb[i] = pow((rgb[i] * 1.055), (1.0 / 2.4)) - 0.055;
     }
-    if(rgb[1] < 0)
-        rgb[1] = 0;
-    if(rgb[1] > 255)
-        rgb[1] = 255;
 
-    scale(rgb, 0.00392156863); // divide by 255
-    
-    if(rgb[0] < 0 || rgb[0] > 255 || rgb[1] < 0 || rgb[1] > 255 || rgb[2] < 0 || rgb[2] > 255)
-        cout << "Out of Range\n";
-    // scale(rgb, density*5); // Do this?
-    */
+    //cout << rgb[0] << ", " << rgb[1] << ", " << rgb[2] << "\n";
 }

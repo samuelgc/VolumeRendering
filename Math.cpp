@@ -1,7 +1,13 @@
 #include "Math.h"
 
 
-double dist(double a[], double b[]){
+double max(double a, double b) {
+    if (a > b)
+        return a;
+    return b;
+}
+
+double dist(double a[], double b[]) {
     double sum = 0;
     for (int i = 0; i < 3; i++)
         sum += pow(b[i] - a[i], 2.0);
@@ -30,10 +36,20 @@ void scale(double a[], double s) {
         a[i] *= s;
 }
 
+void divide(double a[], double div) {
+    for(int i = 0; i < 3; i++) 
+        a[i] /= div;
+}
+
 void normalize(double a[]) {
     double div = len(a);
     for(int i = 0; i < 3; i++)
         a[i] /= div;
+}
+
+void copy(double a[], double b[]) {
+    for(int i = 0; i < 3; i++)
+        b[i] = a[i];
 }
 
 void reset(double a[]) {

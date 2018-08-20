@@ -7,6 +7,11 @@
 
 const double PI = 3.14159265359;
 
+/**
+ * Returns a if a > b else returns b
+ */
+double max(double a, double b);
+
 /// Vector Math ///
 
 /**
@@ -51,11 +56,27 @@ void subtract(double a[], double b[]);
 void scale(double a[], double s);
 
 /**
+ * Divides vector a by value div
+ * 
+ * @param a - vector
+ * @param div - dividend
+ */
+void divide(double a[], double div);
+
+/**
  * Normalizes the vector given
  *
  * @param a - vector
  */
 void normalize(double a[]);
+
+/**
+ * Copies values in a to b
+ * 
+ * @param a - vector to copy
+ * @param b - destination vector
+ */
+void copy(double a[], double b[]);
 
 /**
  * Sets all values of a to 0
