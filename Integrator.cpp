@@ -39,7 +39,7 @@ double Integrator::intersect(double orig[], double d[], Volume* box, double *t_f
 
 /**
  * Samuel version...
- *
+ */
 void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
     Volume* vol = objs.at(0);
     double eor = 0;
@@ -74,7 +74,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         if(wig > eor)
             return;
         move(pos, w, wig, pos);
-        if(wig < .333) {
+        if(wig < .5) {
             double rgb[3] = {1,1,1};
             radiance(pos, w, vol, rgb);
             sum(result, rgb);
@@ -97,7 +97,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
 
 /**
  * Brian version...
- */
+ *
 void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, double result[]) {
     Volume* vol = objs.at(0);
     double eor = 0;
@@ -187,6 +187,7 @@ void Integrator::integrate(double orig[], double d[], vector<Volume*> objs, doub
         }
     }
 }
+*/
 
 void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     Material* m = v->getMat();
@@ -220,7 +221,7 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
     xyz[1] = chr1[1] * val_y;
     xyz[2] = chr2[2] * val_z;
 
-    //cout << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << " => ";
+    // cout << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << " => ";
 
     // Convert XYZ to sRGB colorspace
     rgb[0] = 3.2404542 * xyz[0] - 1.5371385 * xyz[1] - 0.4985314 * xyz[2];
@@ -233,5 +234,5 @@ void Integrator::radiance(double pos[], double dir[], Volume* v, double rgb[]) {
             rgb[i] = pow((rgb[i] * 1.055), (1.0 / 2.4)) - 0.055;
     }
 
-    //cout << rgb[0] << ", " << rgb[1] << ", " << rgb[2] << "\n";
+    // cout << rgb[0] << ", " << rgb[1] << ", " << rgb[2] << "\n";
 }
